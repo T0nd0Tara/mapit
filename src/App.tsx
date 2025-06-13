@@ -26,8 +26,7 @@ export default function PostmanApp() {
   };
 
   return (  
-    <div>
-      <Card>
+      <Card className="w-dvw h-dvh">
         <CardContent className="space-y-4 p-4">
           <div className="flex space-x-2">
             <select
@@ -64,6 +63,5 @@ export default function PostmanApp() {
           />
         </CardContent>
       </Card>
-    </div>
   );
 }
