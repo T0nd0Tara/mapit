@@ -25,9 +25,8 @@ export default function PostmanApp() {
     }
   };
 
-  return (
-    <div className="p-6 max-w-4xl mx-auto space-y-4">
-      <h1 className="text-2xl font-bold">React Postman Clone</h1>
+  return (  
+    <div>
       <Card>
         <CardContent className="space-y-4 p-4">
           <div className="flex space-x-2">
