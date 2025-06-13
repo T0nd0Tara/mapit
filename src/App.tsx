@@ -1,32 +1,21 @@
-import './App.scss'
 import React, { useState } from "react";
 import axios from "axios";
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  MenuItem,
-  Select,
-  TextField,
-  Typography,
-  useMediaQuery,
-  useTheme,
-  Stack
-} from "@mui/material";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 
-export default function App() {
+export default function PostmanApp() {
   const [method, setMethod] = useState("GET");
   const [url, setUrl] = useState("");
   const [body, setBody] = useState("");
   const [response, setResponse] = useState("");
 
-  const theme = useTheme();
-
   const sendRequest = async () => {
     try {
       const config = {
-        method, url,
+        method,
+        url,
         ...(method !== "GET" && { data: JSON.parse(body || '{}') }),
       };
       const res = await axios(config);
@@ -37,55 +26,45 @@ export default function App() {
   };
 
   return (
-    <Box sx={{ p: 0, width: "100vw", height: "100vh", mw: "10", mx: 0 }}>
-      <Card sx={{ height: "100%"}}>
-        <CardContent sx={{ height: "100%"}}>
-          <Stack
-            spacing={2}
-            mb={2}
-          >
-            <Select
+    <div className="p-6 max-w-4xl mx-auto space-y-4">
+      <h1 className="text-2xl font-bold">React Postman Clone</h1>
+      <Card>
+        <CardContent className="space-y-4 p-4">
+          <div className="flex space-x-2">
+            <select
               value={method}
               onChange={(e) => setMethod(e.target.value)}
-              size="small"
+              className="border rounded px-2 py-1"
             >
-              {['GET', 'POST', 'PUT', 'DELETE', 'PATCH'].map((m) => (
-                <MenuItem key={m} value={m}>{m}</MenuItem>
+              {['GET', 'POST', 'PUT', 'DELETE', 'PATCH'].map(m => (
+                <option key={m} value={m}>{m}</option>
               ))}
-            </Select>
-            <TextField
-              fullWidth
-              size="small"
-              label="Request URL"
+            </select>
+            <Input
+              type="text"
+              placeholder="Enter URL"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
+              className="flex-grow"
             />
-            <Button variant="contained" onClick={sendRequest}>
-              Send
-            </Button>
-          </Stack>
-          {method !== "GET" && (
-            <TextField
-              fullWidth
-              multiline
-              // minRows={6}
-              label="Request Body (JSON)"
+            <Button onClick={sendRequest}>Send</Button>
+          </div>
+          {(method !== "GET") && (
+            <Textarea
+              placeholder="Request Body (JSON)"
               value={body}
               onChange={(e) => setBody(e.target.value)}
-              margin="normal"
+              className="w-full h-40"
             />
           )}
-          <TextField
-            fullWidth
-            multiline
-            // minRows={10}
-            label="Response"
+          <Textarea
+            readOnly
+            placeholder="Response will appear here"
             value={response}
-            InputProps={{ readOnly: true }}
-            margin="normal"
+            className="w-full h-60"
           />
         </CardContent>
       </Card>
-    </Box>
+    </div>
   );
 }
