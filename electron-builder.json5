@@ -1,9 +1,9 @@
 // @see - https://www.electron.build/configuration/configuration
 {
   "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
-  "appId": "YourAppID",
+  "appId": "Mapit",
   "asar": true,
-  "productName": "YourAppName",
+  "productName": "Mapit",
   "directories": {
     "output": "release/${version}"
   },
@@ -38,6 +38,7 @@
     "target": [
       "AppImage"
     ],
-    "artifactName": "${productName}-Linux-${version}.${ext}"
+    "artifactName": "${productName}-Linux-${version}.${ext}",
+    "icon": "build/logo.png"
   }
 }
