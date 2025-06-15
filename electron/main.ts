@@ -1,6 +1,8 @@
 import { app, BrowserWindow } from 'electron'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
+import { ipcMain } from 'electron'
+import axios from 'axios'
 import path from 'node:path'
 
 const require = createRequire(import.meta.url)
@@ -65,4 +67,12 @@ app.on('activate', () => {
   }
 })
 
+ipcMain.handle('proxy-request', async (event, config) => {
+  try {
+    const response = await axios(config);
+    return { data: response.data, status: response.status };
+  } catch (err) {
+    return { error: err.message, status: err.response?.status ?? 500 };
+  }
+});
 app.whenReady().then(createWindow)

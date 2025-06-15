@@ -22,3 +22,7 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   // You can expose other APTs you need here.
   // ...
 })
+
+contextBridge.exposeInMainWorld('electronAPI', {
+  proxyRequest: (config) => ipcRenderer.invoke('proxy-request', config)
+})

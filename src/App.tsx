@@ -98,7 +98,7 @@ function RequestConfigTabs() {
 export default function App() {
   const [method, setMethod] = useState(HttpMethod.GET);
   const [url, setUrl] = useState("");
-  const [body, setBody] = useState("");
+  const [body, setBody] = useState(null);
   const [response, setResponse] = useState("");
   const [viewMethod, setViewMethod] = useState();
 
@@ -107,9 +107,9 @@ export default function App() {
       const config = {
         method,
         url,
-        ...(method !== "GET" && { data: JSON.parse(body || '{}') }),
+        ...(method !== "GET" && { data: JSON.parse(body ?? '{}') }),
       };
-      const res = await axios(config);
+      const res = await window.electronAPI.proxyRequest(config);
       setResponse(JSON.stringify(res.data, null, 2));
     } catch (err) {
       setResponse(err.message);
