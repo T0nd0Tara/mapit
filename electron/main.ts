@@ -67,12 +67,6 @@ app.on('activate', () => {
   }
 })
 
-ipcMain.handle('proxy-request', async (event, config) => {
-  try {
-    const response = await axios(config);
-    return { data: response.data, status: response.status };
-  } catch (err) {
-    return { error: err.message, status: err.response?.status ?? 500 };
-  }
-});
+ipcMain.handle('proxy-request', async (event, config) => await axios(config));
+
 app.whenReady().then(createWindow)
