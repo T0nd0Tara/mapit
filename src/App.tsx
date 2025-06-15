@@ -18,14 +18,14 @@ enum ViewMethod {
   PREVIEW = 'Preview',
 }
 
-function MyTabs() {
+function RequestConfigTabs() {
   return (
-<Tabs defaultValue="account">
+<Tabs defaultValue="headers">
         <TabsList>
-          <TabsTrigger value="account">Account</TabsTrigger>
-          <TabsTrigger value="password">Password</TabsTrigger>
+          <TabsTrigger value="headers">Headers</TabsTrigger>
+          <TabsTrigger value="body">Body</TabsTrigger>
         </TabsList>
-        <TabsContent value="account">
+        <TabsContent value="headers">
           <Card>
             <CardHeader>
               <CardTitle>Account</CardTitle>
@@ -49,7 +49,7 @@ function MyTabs() {
             </CardFooter>
           </Card>
         </TabsContent>
-        <TabsContent value="password">
+        <TabsContent value="body">
           <Card>
             <CardHeader>
               <CardTitle>Password</CardTitle>
@@ -129,7 +129,7 @@ export default function App() {
               className="w-full h-40"
             />
           )}
-        <MyTabs></MyTabs>
+        <RequestConfigTabs></RequestConfigTabs>
           <Textarea
             readOnly
             placeholder="Response will appear here"
