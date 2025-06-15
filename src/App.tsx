@@ -1,21 +1,38 @@
 import React, { useState } from "react";
 import axios from "axios";
-import {   Card,
+import {
+  Card,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle, } from "@/components/ui/card";
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 enum ViewMethod {
   PRETTY = 'Pretty',
   RAW = 'Raw',
   PREVIEW = 'Preview',
+}
+
+enum HttpMethod {
+  GET = 'GET',
+  POST = 'POST',
+  PUT = 'PUT',
+  DELETE = 'DELETE',
+  PATCH = 'PATCH',
 }
 
 function RequestConfigTabs() {
@@ -79,7 +96,7 @@ function RequestConfigTabs() {
 }
 
 export default function App() {
-  const [method, setMethod] = useState("GET");
+  const [method, setMethod] = useState(HttpMethod.GET);
   const [url, setUrl] = useState("");
   const [body, setBody] = useState("");
   const [response, setResponse] = useState("");
@@ -91,7 +108,7 @@ export default function App() {
         method,
         url,
         ...(method !== "GET" && { data: JSON.parse(body || '{}') }),
-      }; 
+      };
       const res = await axios(config);
       setResponse(JSON.stringify(res.data, null, 2));
     } catch (err) {
@@ -99,19 +116,20 @@ export default function App() {
     }
   };
 
-  return (  
+  return (
     <Card className="w-dvw h-dvh">
       <CardContent className="space-y-4 p-4">
         <div className="flex space-x-2">
-          <select
-            value={method}
-            onChange={(e) => setMethod(e.target.value)}
-            className="border rounded px-2 py-1"
-          >
-            {['GET', 'POST', 'PUT', 'DELETE', 'PATCH'].map(m => (
-              <option key={m} value={m}>{m}</option>
-            ))}
-          </select>
+          <Select onValueChange={setMethod} defaultValue={HttpMethod.GET}>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {Object.keys(HttpMethod).map(method => (
+                <SelectItem value={method}>{method}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <Input
             type="text"
             placeholder="Enter URL"
