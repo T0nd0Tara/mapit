@@ -109,7 +109,7 @@ export default function App() {
         url,
         ...(method !== "GET" && { data: JSON.parse(body ?? '{}') }),
       };
-      const res = await window.electronAPI.proxyRequest(config);
+      const res = await axios.request(config);
       setResponse(JSON.stringify(res.data, null, 2));
     } catch (err) {
       setResponse(err.message);
