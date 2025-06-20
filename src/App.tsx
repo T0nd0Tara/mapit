@@ -88,14 +88,12 @@ function RequestConfigTabs({ request }: { request: IRequestState }) {
         </Card>
       </TabsContent>
       <TabsContent value="body">
-        {(request.method.value !== "GET") && (
-          <Textarea
-            placeholder="Request Body (JSON)"
-            value={request.body.value}
-            onChange={(e) => request.body.set(e.target.value)}
-            className="w-full h-40"
-          />
-        )}
+        <Textarea
+          placeholder="Request Body (JSON)"
+          value={request.body.value}
+          onChange={(e) => request.body.set(e.target.value)}
+          className="w-full h-40"
+        />
       </TabsContent>
     </Tabs>
 
