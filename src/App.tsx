@@ -96,7 +96,7 @@ function RequestConfigTabs() {
 }
 
 export default function App() {
-  const [method, setMethod] = useState(HttpMethod.GET);
+  const [method, setMethod] = useState<string>(HttpMethod.GET);
   const [url, setUrl] = useState("");
   const [body, setBody] = useState(null);
   const [response, setResponse] = useState("");
