@@ -137,7 +137,7 @@ export default function App() {
       <CardContent className="space-y-4 p-4" style={{ height: "100%" }}>
         <ResizablePanelGroup direction="vertical" style={{ height: "100%" }}>
           <ResizablePanel minSize={40}>
-            <div className="flex space-x-2">
+            <div className="flex space-x-2 mb-2">
               <Select onValueChange={(value: string) => request.method.set(value as HttpMethod)} defaultValue={HttpMethod.GET}>
                 <SelectTrigger>
                   <SelectValue />
@@ -155,7 +155,7 @@ export default function App() {
                 onChange={(e) => request.url.set(e.target.value)}
                 className="flex-grow"
               />
-              <Button onClick={sendRequest}>Send</Button>
+              <Button onClick={sendRequest} variant="outline">Send</Button>
             </div>
 
             <RequestConfigTabs request={request}></RequestConfigTabs>
