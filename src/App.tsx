@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { IpcSocketConnectOpts } from "node:net";
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "./components/ui/resizable";
 
 enum ViewMethod {
   PRETTY = 'Pretty',
@@ -133,34 +134,43 @@ export default function App() {
 
   return (
     <Card className="w-dvw h-dvh">
-      <CardContent className="space-y-4 p-4">
-        <div className="flex space-x-2">
-          <Select onValueChange={(value: string) => request.method.set(value as HttpMethod)} defaultValue={HttpMethod.GET}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.keys(HttpMethod).map(method => (
-                <SelectItem value={method}>{method}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Input
-            type="text"
-            placeholder="Enter URL"
-            value={request.url.value}
-            onChange={(e) => request.url.set(e.target.value)}
-            className="flex-grow"
-          />
-          <Button onClick={sendRequest}>Send</Button>
-        </div>
-        <RequestConfigTabs request={request}></RequestConfigTabs>
-        <Textarea
-          readOnly
-          placeholder="Response will appear here"
-          value={response}
-          className="w-full h-60"
-        />
+      <CardContent className="space-y-4 p-4" style={{ height: "100%" }}>
+        <ResizablePanelGroup direction="vertical" style={{ height: "100%" }}>
+          <ResizablePanel minSize={40}>
+            <div className="flex space-x-2">
+              <Select onValueChange={(value: string) => request.method.set(value as HttpMethod)} defaultValue={HttpMethod.GET}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.keys(HttpMethod).map(method => (
+                    <SelectItem value={method}>{method}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Input
+                type="text"
+                placeholder="Enter URL"
+                value={request.url.value}
+                onChange={(e) => request.url.set(e.target.value)}
+                className="flex-grow"
+              />
+              <Button onClick={sendRequest}>Send</Button>
+            </div>
+
+            <RequestConfigTabs request={request}></RequestConfigTabs>
+
+          </ResizablePanel>
+          <ResizableHandle withHandle />
+          <ResizablePanel>
+            <Textarea
+              readOnly
+              placeholder="Response will appear here"
+              value={response}
+              className="w-full h-60"
+            />
+          </ResizablePanel>
+        </ResizablePanelGroup>
       </CardContent>
     </Card>
   );
