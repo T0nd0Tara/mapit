@@ -48,8 +48,18 @@ function useComState<T>(initialState: T): IState<T> {
   const [value, set] = useState<T>(initialState);
   return { value, set };
 }
+interface IKeyValueObj {
+  key: string,
+  value: string,
+  enabled?: boolean // if not set, we assume it's true
+}
 
-type Headers = { [key: string]: string };
+interface IHeader extends IKeyValueObj {
+  key: string,
+  value: string,
+  enabled: boolean
+}
+type Headers = IHeader[];
 interface IRequest {
   method: HttpMethod,
   url: string,
@@ -60,11 +70,19 @@ interface IRequest {
 
 type IRequestState = { [key in keyof IRequest]: IState<IRequest[key]> };
 
-function KeyValueEditableTable({ values }: { values: IState<{ [key: string]: string }> }) {
-  function updateValues(oldKey: string, newKey: string, newValue: string) {
-    const newValues = _.omit(values.value, oldKey)
-    newValues[newKey] = newValue
-    values.set(newValues);
+function KeyValueEditableTable({ values }: { values: IState<IKeyValueObj[]> }) {
+  function updateItem(index: number, newKey: string, newValue: string) {
+    values.value[index].value = newValue;
+    values.value[index].key = newKey;
+    values.set([...values.value]);
+  }
+  function addItem(key: string, value: string) {
+    values.set([
+      ...values.value,
+      {
+        key, value, enabled: true
+      }
+    ])
   }
   return (
     <Table>
@@ -76,21 +94,21 @@ function KeyValueEditableTable({ values }: { values: IState<{ [key: string]: str
         </TableRow>
       </TableHeader>
       <TableBody>
-        {Object.entries(values.value).map(([key, value], index) => (
-          <TableRow key={index}>o
+        {values.value.map((keyVal: IKeyValueObj, index) => (
+          <TableRow key={index}>
             <TableCell>
               <Input
                 type="text"
-                value={key}
-                onChange={(e) => updateValues(key, e.target.value, value)}
+                value={keyVal.key}
+                onChange={(e) => updateItem(index, e.target.value, keyVal.value)}
                 className="flex-grow"
               />
             </TableCell>
             <TableCell>
               <Input
                 type="text"
-                value={value}
-                onChange={(e) => updateValues(key, key, e.target.value)}
+                value={keyVal.value}
+                onChange={(e) => updateItem(index, keyVal.key, e.target.value)}
                 className="flex-grow"
               />
             </TableCell>
@@ -99,6 +117,24 @@ function KeyValueEditableTable({ values }: { values: IState<{ [key: string]: str
             </TableCell>
           </TableRow>
         ))}
+        <TableRow key={values.value.length}>
+          <TableCell>
+            <Input
+              type="text"
+              onChange={(e) => addItem(e.target.value, "")}
+              className="flex-grow"
+            />
+          </TableCell>
+          <TableCell>
+            <Input
+              type="text"
+              onChange={(e) => addItem("", e.target.value)}
+              className="flex-grow"
+            />
+          </TableCell>
+          <TableCell>
+          </TableCell>
+        </TableRow>
       </TableBody>
     </Table>
   );
@@ -165,7 +201,7 @@ export default function App() {
     url: useComState(""),
     method: useComState(HttpMethod.GET),
     params: useComState({}),
-    headers: useComState({ a: "b" }),
+    headers: useComState([]),
     body: useComState(null),
   };
   const [response, setResponse] = useState("");
@@ -177,7 +213,11 @@ export default function App() {
         url: request.url.value,
         method: request.method.value,
         params: request.params.value,
-        headers: request.headers.value,
+        headers: request.headers.value.reduce((prev, header: IHeader) => {
+          if (header.enabled)
+            prev[header.key] = header.value;
+          return prev;
+        }, {}),
         data: request.body.value,
       };
       const res = await axios.request(config);
