@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios, { AxiosRequestConfig } from "axios";
 import {
   Card,
@@ -239,7 +239,7 @@ export default function App() {
                 </SelectTrigger>
                 <SelectContent>
                   {Object.keys(HttpMethod).map(method => (
-                    <SelectItem value={method}>{method}</SelectItem>
+                    <SelectItem key={method} value={method}>{method}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
