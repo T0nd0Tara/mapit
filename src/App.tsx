@@ -21,6 +21,9 @@ import {
 } from "@/components/ui/select"
 import { IpcSocketConnectOpts } from "node:net";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "./components/ui/resizable";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./components/ui/table";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import _ from "lodash"
 
 enum ViewMethod {
   PRETTY = 'Pretty',
@@ -46,15 +49,66 @@ function useComState<T>(initialState: T): IState<T> {
   return { value, set };
 }
 
+type Headers = { [key: string]: string };
 interface IRequest {
   method: HttpMethod,
   url: string,
   params?: { [key: string]: any },
   body?: any,
-  headers?: { [key: string]: string },
+  headers?: Headers,
 };
 
 type IRequestState = { [key in keyof IRequest]: IState<IRequest[key]> };
+
+function KeyValueEditableTable({ values }: { values: IState<{ [key: string]: string }> }) {
+  function updateValues(oldKey: string, newKey: string, newValue: string) {
+    const newValues = _.omit(values.value, oldKey)
+    newValues[newKey] = newValue
+    values.set(newValues);
+  }
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Key</TableHead>
+          <TableHead>Value</TableHead>
+          <TableHead></TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {Object.entries(values.value).map(([key, value]) => (
+          <TableRow key={key}>
+            <TableCell>
+              <Input
+                type="text"
+                value={key}
+                onChange={(e) => updateValues(key, e.target.value, value)}
+                className="flex-grow"
+              />
+            </TableCell>
+            <TableCell>
+              <Input
+                type="text"
+                value={value}
+                onChange={(e) => updateValues(key, key, e.target.value)}
+                className="flex-grow"
+              />
+            </TableCell>
+            <TableCell>
+              <FontAwesomeIcon icon={["far", "trash-can"]} />
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+
+}
+function RequestHeadersConfig({ headers }: { headers: IState<Headers> }) {
+  return (
+    <KeyValueEditableTable values={headers}></KeyValueEditableTable>
+  );
+}
 
 function RequestConfigTabs({ request }: { request: IRequestState }) {
   return (
@@ -65,28 +119,29 @@ function RequestConfigTabs({ request }: { request: IRequestState }) {
         <TabsTrigger value="body">Body</TabsTrigger>
       </TabsList>
       <TabsContent value="headers">
-        <Card>
-          <CardHeader>
-            <CardTitle>Account</CardTitle>
-            <CardDescription>
-              Make changes to your account here. Click save when you&apos;re
-              done.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="grid gap-6">
-            <div className="grid gap-3">
-              <Label htmlFor="tabs-demo-name">Name</Label>
-              <Input id="tabs-demo-name" defaultValue="Pedro Duarte" />
-            </div>
-            <div className="grid gap-3">
-              <Label htmlFor="tabs-demo-username">Username</Label>
-              <Input id="tabs-demo-username" defaultValue="@peduarte" />
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Button>Save changes</Button>
-          </CardFooter>
-        </Card>
+        <RequestHeadersConfig headers={request.headers}></RequestHeadersConfig>
+        {/* <Card> */}
+        {/*   <CardHeader> */}
+        {/*     <CardTitle>Account</CardTitle> */}
+        {/*     <CardDescription> */}
+        {/*       Make changes to your account here. Click save when you&apos;re */}
+        {/*       done. */}
+        {/*     </CardDescription> */}
+        {/*   </CardHeader> */}
+        {/*   <CardContent className="grid gap-6"> */}
+        {/*     <div className="grid gap-3"> */}
+        {/*       <Label htmlFor="tabs-demo-name">Name</Label> */}
+        {/*       <Input id="tabs-demo-name" defaultValue="Pedro Duarte" /> */}
+        {/*     </div> */}
+        {/*     <div className="grid gap-3"> */}
+        {/*       <Label htmlFor="tabs-demo-username">Username</Label> */}
+        {/*       <Input id="tabs-demo-username" defaultValue="@peduarte" /> */}
+        {/*     </div> */}
+        {/*   </CardContent> */}
+        {/*   <CardFooter> */}
+        {/*     <Button>Save changes</Button> */}
+        {/*   </CardFooter> */}
+        {/* </Card> */}
       </TabsContent>
       <TabsContent value="body">
         <Textarea
@@ -110,7 +165,7 @@ export default function App() {
     url: useComState(""),
     method: useComState(HttpMethod.GET),
     params: useComState({}),
-    headers: useComState({}),
+    headers: useComState({ a: "b" }),
     body: useComState(null),
   };
   const [response, setResponse] = useState("");
@@ -161,7 +216,7 @@ export default function App() {
             <RequestConfigTabs request={request}></RequestConfigTabs>
 
           </ResizablePanel>
-          <ResizableHandle withHandle />
+          <ResizableHandle withHandle className="my-3" />
           <ResizablePanel>
             <Textarea
               readOnly
