@@ -76,8 +76,8 @@ function KeyValueEditableTable({ values }: { values: IState<{ [key: string]: str
         </TableRow>
       </TableHeader>
       <TableBody>
-        {Object.entries(values.value).map(([key, value]) => (
-          <TableRow key={key}>
+        {Object.entries(values.value).map(([key, value], index) => (
+          <TableRow key={index}>
             <TableCell>
               <Input
                 type="text"
