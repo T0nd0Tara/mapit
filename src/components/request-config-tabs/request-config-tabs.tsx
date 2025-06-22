@@ -2,6 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { IRequestState } from "@/types/request";
 import { RequestHeadersConfig } from "@/components/request-config-tabs/request-header-config";
+import { RequestParamConfig } from "./request-param-config";
 
 export function RequestConfigTabs({ request }: { request: IRequestState }) {
   return (
@@ -35,6 +36,9 @@ export function RequestConfigTabs({ request }: { request: IRequestState }) {
         {/*     <Button>Save changes</Button> */}
         {/*   </CardFooter> */}
         {/* </Card> */}
+      </TabsContent>
+      <TabsContent value="params">
+        <RequestParamConfig params={request.params} />
       </TabsContent>
       <TabsContent value="body">
         <Textarea

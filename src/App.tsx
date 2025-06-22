@@ -27,6 +27,7 @@ import { IState } from "./types/state";
 import { RequestConfigTabs } from "./components/request-config-tabs/request-config-tabs";
 import { HttpMethod } from "./types/http";
 import { IHeader, IRequestState } from "./types/request";
+import { IKeyValueObj } from "./components/common/key-value-editable-table";
 
 enum ViewMethod {
   PRETTY = 'Pretty',
@@ -47,24 +48,27 @@ export default function App() {
   const request: IRequestState = {
     url: useComState(""),
     method: useComState(HttpMethod.GET),
-    params: useComState({}),
+    params: useComState([]),
     headers: useComState([]),
     body: useComState(null),
   };
   const [response, setResponse] = useState("");
   const [viewMethod, setViewMethod] = useState();
+  const keyValToObject = (vals: IKeyValueObj[]): any =>
+    vals.reduce((prev, keyVal: IKeyValueObj) => {
+      if (keyVal.enabled)
+        prev[keyVal.key] = keyVal.value;
+      return prev;
+    }, {});
+
 
   const sendRequest = async () => {
     try {
       const config: AxiosRequestConfig<any> = {
         url: request.url.value,
         method: request.method.value,
-        params: request.params.value,
-        headers: request.headers.value.reduce((prev, header: IHeader) => {
-          if (header.enabled)
-            prev[header.key] = header.value;
-          return prev;
-        }, {}),
+        params: keyValToObject(request.params.value),
+        headers: keyValToObject(request.headers.value),
         data: request.body.value,
       };
       const res = await axios.request(config);

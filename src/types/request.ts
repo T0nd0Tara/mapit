@@ -7,10 +7,14 @@ export interface IHeader {
   enabled: boolean
 }
 export type IHeaders = IHeader[];
+
+export type IParam = IHeader;
+export type IParams = IParam[];
+
 export interface IRequest {
   method: HttpMethod,
   url: string,
-  params?: { [key: string]: any },
+  params?: IParams,
   body?: any,
   headers?: IHeaders,
 };
