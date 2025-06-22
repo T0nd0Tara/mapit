@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
+import { Textarea } from "@/components/ui/textarea";
 import axios, { AxiosRequestConfig } from "axios";
+import { useComState } from '@/utils/react'
 import {
   Card,
   CardContent,
@@ -11,7 +13,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select, SelectContent,
@@ -21,9 +22,11 @@ import {
 } from "@/components/ui/select"
 import { IpcSocketConnectOpts } from "node:net";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "./components/ui/resizable";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./components/ui/table";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import _ from "lodash"
+import { IState } from "./types/state";
+import { RequestConfigTabs } from "./components/request-config-tabs/request-config-tabs";
+import { HttpMethod } from "./types/http";
+import { IHeader, IRequestState } from "./types/request";
 
 enum ViewMethod {
   PRETTY = 'Pretty',
@@ -31,164 +34,10 @@ enum ViewMethod {
   PREVIEW = 'Preview',
 }
 
-enum HttpMethod {
-  GET = 'GET',
-  POST = 'POST',
-  PUT = 'PUT',
-  DELETE = 'DELETE',
-  PATCH = 'PATCH',
-}
-
-interface IState<T> {
-  value: T,
-  set: (newValue: T) => void,
-}
-
-function useComState<T>(initialState: T): IState<T> {
-  const [value, set] = useState<T>(initialState);
-  return { value, set };
-}
-interface IKeyValueObj {
-  key: string,
-  value: string,
-  enabled?: boolean // if not set, we assume it's true
-}
-
-interface IHeader extends IKeyValueObj {
-  key: string,
-  value: string,
-  enabled: boolean
-}
-type Headers = IHeader[];
-interface IRequest {
-  method: HttpMethod,
-  url: string,
-  params?: { [key: string]: any },
-  body?: any,
-  headers?: Headers,
-};
-
-type IRequestState = { [key in keyof IRequest]: IState<IRequest[key]> };
-
-function KeyValueEditableTable({ values }: { values: IState<IKeyValueObj[]> }) {
-  const handleChange = (index: number, field: "key" | "value", value: string) => {
-    const newRows = [...values.value];
-
-    const isLastRow = index === values.value.length;
-    const opField: "key" | "value" = field === "key" ? "value" : "key";
-    if (isLastRow) {
-      const emptyObject = { key: "", value: "" };
-      emptyObject[field] = value
-      newRows.push(emptyObject);
-    } else if (value === "" && newRows[index][opField] === "") {
-      // We removed both the value and the key so naturally we need to delete the row
-      deleteRow(index)
-      return;
-    }
-    else newRows[index][field] = value;
 
 
-    values.set(newRows);
-  };
 
-  const deleteRow = (index: number) => {
-    values.value.splice(index, 1);
-    values.set([...values.value]);
-  }
 
-  const valuesWithNewRow: IKeyValueObj[] = [...values.value, { key: "", value: "" }];
-
-  return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Key</TableHead>
-          <TableHead>Value</TableHead>
-          <TableHead></TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {valuesWithNewRow.map((keyVal: IKeyValueObj, index) => (
-          <TableRow key={index}>
-            <TableCell>
-              <Input
-                type="text"
-                value={keyVal.key}
-                onChange={(e) => handleChange(index, 'key', e.target.value)}
-                className="flex-grow"
-              />
-            </TableCell>
-            <TableCell>
-              <Input
-                type="text"
-                value={keyVal.value}
-                onChange={(e) => handleChange(index, 'value', e.target.value)}
-                className="flex-grow"
-              />
-            </TableCell>
-            <TableCell>
-              {(index !== values.value.length) &&
-                <FontAwesomeIcon icon={["far", "trash-can"]} className="cursor-pointer" onClick={() => deleteRow(index)} />
-              }
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-  );
-
-}
-function RequestHeadersConfig({ headers }: { headers: IState<Headers> }) {
-  return (
-    <KeyValueEditableTable values={headers}></KeyValueEditableTable>
-  );
-}
-
-function RequestConfigTabs({ request }: { request: IRequestState }) {
-  return (
-    <Tabs defaultValue="headers">
-      <TabsList>
-        <TabsTrigger value="headers">Headers</TabsTrigger>
-        <TabsTrigger value="params">Params</TabsTrigger>
-        <TabsTrigger value="body">Body</TabsTrigger>
-      </TabsList>
-      <TabsContent value="headers">
-        <RequestHeadersConfig headers={request.headers}></RequestHeadersConfig>
-        {/* <Card> */}
-        {/*   <CardHeader> */}
-        {/*     <CardTitle>Account</CardTitle> */}
-        {/*     <CardDescription> */}
-        {/*       Make changes to your account here. Click save when you&apos;re */}
-        {/*       done. */}
-        {/*     </CardDescription> */}
-        {/*   </CardHeader> */}
-        {/*   <CardContent className="grid gap-6"> */}
-        {/*     <div className="grid gap-3"> */}
-        {/*       <Label htmlFor="tabs-demo-name">Name</Label> */}
-        {/*       <Input id="tabs-demo-name" defaultValue="Pedro Duarte" /> */}
-        {/*     </div> */}
-        {/*     <div className="grid gap-3"> */}
-        {/*       <Label htmlFor="tabs-demo-username">Username</Label> */}
-        {/*       <Input id="tabs-demo-username" defaultValue="@peduarte" /> */}
-        {/*     </div> */}
-        {/*   </CardContent> */}
-        {/*   <CardFooter> */}
-        {/*     <Button>Save changes</Button> */}
-        {/*   </CardFooter> */}
-        {/* </Card> */}
-      </TabsContent>
-      <TabsContent value="body">
-        <Textarea
-          placeholder="Request Body (JSON)"
-          value={request.body.value}
-          onChange={(e) => request.body.set(e.target.value)}
-          className="w-full h-40"
-        />
-      </TabsContent>
-    </Tabs>
-
-  )
-}
 
 export default function App() {
   // const [method, setMethod] = useState<string>(HttpMethod.GET);
