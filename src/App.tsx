@@ -24,6 +24,7 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "./componen
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./components/ui/table";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import _ from "lodash"
+import { ulid } from "ulid";
 
 enum ViewMethod {
   PRETTY = 'Pretty',
@@ -71,19 +72,23 @@ interface IRequest {
 type IRequestState = { [key in keyof IRequest]: IState<IRequest[key]> };
 
 function KeyValueEditableTable({ values }: { values: IState<IKeyValueObj[]> }) {
-  function updateItem(index: number, newKey: string, newValue: string) {
-    values.value[index].value = newValue;
-    values.value[index].key = newKey;
-    values.set([...values.value]);
-  }
-  function addItem(key: string, value: string) {
-    values.set([
-      ...values.value,
-      {
-        key, value, enabled: true
-      }
-    ])
-  }
+  const handleChange = (index: number, field: "key" | "value", value: string) => {
+    if (value === "") return;
+
+    const newRows = [...values.value];
+
+    const isLastRow = index === values.value.length;
+    if (isLastRow) {
+      const emptyObject = { key: "", value: "" };
+      emptyObject[field] = value
+      newRows.push(emptyObject);
+    } else newRows[index][field] = value;
+
+    values.set(newRows);
+  };
+
+  const valuesWithNewRow: IKeyValueObj[] = [...values.value, { key: "", value: "" }];
+
   return (
     <Table>
       <TableHeader>
@@ -94,13 +99,13 @@ function KeyValueEditableTable({ values }: { values: IState<IKeyValueObj[]> }) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {values.value.map((keyVal: IKeyValueObj, index) => (
+        {valuesWithNewRow.map((keyVal: IKeyValueObj, index) => (
           <TableRow key={index}>
             <TableCell>
               <Input
                 type="text"
                 value={keyVal.key}
-                onChange={(e) => updateItem(index, e.target.value, keyVal.value)}
+                onChange={(e) => handleChange(index, 'key', e.target.value)}
                 className="flex-grow"
               />
             </TableCell>
@@ -108,7 +113,7 @@ function KeyValueEditableTable({ values }: { values: IState<IKeyValueObj[]> }) {
               <Input
                 type="text"
                 value={keyVal.value}
-                onChange={(e) => updateItem(index, keyVal.key, e.target.value)}
+                onChange={(e) => handleChange(index, 'value', e.target.value)}
                 className="flex-grow"
               />
             </TableCell>
@@ -117,24 +122,6 @@ function KeyValueEditableTable({ values }: { values: IState<IKeyValueObj[]> }) {
             </TableCell>
           </TableRow>
         ))}
-        <TableRow key={values.value.length}>
-          <TableCell>
-            <Input
-              type="text"
-              onChange={(e) => addItem(e.target.value, "")}
-              className="flex-grow"
-            />
-          </TableCell>
-          <TableCell>
-            <Input
-              type="text"
-              onChange={(e) => addItem("", e.target.value)}
-              className="flex-grow"
-            />
-          </TableCell>
-          <TableCell>
-          </TableCell>
-        </TableRow>
       </TableBody>
     </Table>
   );
