@@ -24,7 +24,6 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "./componen
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./components/ui/table";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import _ from "lodash"
-import { ulid } from "ulid";
 
 enum ViewMethod {
   PRETTY = 'Pretty',
