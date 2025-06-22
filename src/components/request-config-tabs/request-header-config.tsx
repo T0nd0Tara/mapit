@@ -1,8 +1,8 @@
 import { IState } from "@/types/state";
 import { KeyValueEditableTable } from "@/components/common/key-value-editable-table";
-import { Headers } from "@/types/request";
+import { IHeaders } from "@/types/request";
 
-export function RequestHeadersConfig({ headers }: { headers: IState<Headers> }) {
+export function RequestHeadersConfig({ headers }: { headers: IState<IHeaders> }) {
   return (
     <KeyValueEditableTable values={headers}></KeyValueEditableTable>
   );

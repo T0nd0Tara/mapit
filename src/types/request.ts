@@ -6,13 +6,13 @@ export interface IHeader {
   value: string,
   enabled: boolean
 }
-export type Headers = IHeader[];
+export type IHeaders = IHeader[];
 export interface IRequest {
   method: HttpMethod,
   url: string,
   params?: { [key: string]: any },
   body?: any,
-  headers?: Headers,
+  headers?: IHeaders,
 };
 
 export type IRequestState = { [key in keyof IRequest]: IState<IRequest[key]> };
