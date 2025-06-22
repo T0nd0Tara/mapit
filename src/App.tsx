@@ -87,6 +87,11 @@ function KeyValueEditableTable({ values }: { values: IState<IKeyValueObj[]> }) {
     values.set(newRows);
   };
 
+  const deleteRow = (index: number) => {
+    values.value.splice(index, 1);
+    values.set([...values.value]);
+  }
+
   const valuesWithNewRow: IKeyValueObj[] = [...values.value, { key: "", value: "" }];
 
   return (
@@ -118,7 +123,9 @@ function KeyValueEditableTable({ values }: { values: IState<IKeyValueObj[]> }) {
               />
             </TableCell>
             <TableCell>
-              <FontAwesomeIcon icon={["far", "trash-can"]} />
+              {(index !== values.value.length) &&
+                <FontAwesomeIcon icon={["far", "trash-can"]} className="cursor-pointer" onClick={() => deleteRow(index)} />
+              }
             </TableCell>
           </TableRow>
         ))}
