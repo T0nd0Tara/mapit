@@ -72,16 +72,21 @@ type IRequestState = { [key in keyof IRequest]: IState<IRequest[key]> };
 
 function KeyValueEditableTable({ values }: { values: IState<IKeyValueObj[]> }) {
   const handleChange = (index: number, field: "key" | "value", value: string) => {
-    if (value === "") return;
-
     const newRows = [...values.value];
 
     const isLastRow = index === values.value.length;
+    const opField: "key" | "value" = field === "key" ? "value" : "key";
     if (isLastRow) {
       const emptyObject = { key: "", value: "" };
       emptyObject[field] = value
       newRows.push(emptyObject);
-    } else newRows[index][field] = value;
+    } else if (value === "" && newRows[index][opField] === "") {
+      // We removed both the value and the key so naturally we need to delete the row
+      deleteRow(index)
+      return;
+    }
+    else newRows[index][field] = value;
+
 
     values.set(newRows);
   };
