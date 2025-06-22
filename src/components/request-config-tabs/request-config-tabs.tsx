@@ -8,8 +8,8 @@ export function RequestConfigTabs({ request }: { request: IRequestState }) {
   return (
     <Tabs defaultValue="headers">
       <TabsList>
-        <TabsTrigger value="headers">Headers</TabsTrigger>
-        <TabsTrigger value="params">Params</TabsTrigger>
+        <TabsTrigger value="headers">Headers ({request.headers?.value.length})</TabsTrigger>
+        <TabsTrigger value="params">Params ({request.params?.value.length})</TabsTrigger>
         <TabsTrigger value="body">Body</TabsTrigger>
       </TabsList>
       <TabsContent value="headers">
