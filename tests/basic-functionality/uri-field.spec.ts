@@ -1,6 +1,9 @@
 import { test, expect } from '@playwright/test';
 import { random_string } from '../utils/random';
 
+test.beforeEach(async ({ page }) => {
+  await page.goto('/')
+})
 test.describe('uri-field', () => {
   test('allow to insert invalid uri', async ({ page }) => {
     const invalid_uri = `${random_string()}://??${random_string()}??????==#=##dsafasdf###`
