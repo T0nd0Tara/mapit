@@ -37,11 +37,6 @@ enum ViewMethod {
   PREVIEW = 'Preview',
 }
 
-
-
-
-
-
 export default function App() {
   const request: IRequestState = {
     url: useComState(""),
@@ -128,6 +123,7 @@ export default function App() {
                 </SelectContent>
               </Select>
               <Input
+                data-testid='uri-input'
                 type="text"
                 placeholder="Enter URL"
                 value={uri.value}
