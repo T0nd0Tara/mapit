@@ -4,6 +4,9 @@ import { IParams } from "@/types/request";
 
 export function RequestParamConfig({ params }: { params: IState<IParams> }) {
   return (
-    <KeyValueEditableTable values={params}></KeyValueEditableTable>
+    <KeyValueEditableTable
+      values={params}
+      data-testid={"params-key-value-table"}
+    />
   );
 }

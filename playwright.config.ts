@@ -8,7 +8,7 @@ import { defineConfig, devices } from '@playwright/test';
 // import path from 'path';
 // dotenv.config({ path: path.resolve(__dirname, '.env') });
 
-const webServerPort = 4173
+const webServerPort = 5173
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
@@ -46,6 +46,6 @@ export default defineConfig({
   webServer: {
     command: `npx vite --port ${webServerPort}`,
     url: `http://localhost:${webServerPort}`,
-    reuseExistingServer: false, //!process.env.CI,
+    reuseExistingServer: !process.env.CI,
   },
 });

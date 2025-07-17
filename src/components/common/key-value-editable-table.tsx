@@ -9,7 +9,7 @@ export interface IKeyValueObj {
   enabled: boolean
 }
 
-export function KeyValueEditableTable({ values }: { values: IState<IKeyValueObj[]> }) {
+export function KeyValueEditableTable({ values, ...props }: { values: IState<IKeyValueObj[]> }) {
   const handleChange = (index: number, field: "key" | "value", value: string) => {
     const newRows = [...values.value];
 
@@ -38,7 +38,7 @@ export function KeyValueEditableTable({ values }: { values: IState<IKeyValueObj[
   const valuesWithNewRow: IKeyValueObj[] = [...values.value, { key: "", value: "", enabled: true }];
 
   return (
-    <Table>
+    <Table {...props}>
       <TableHeader>
         <TableRow>
           <TableHead>Key</TableHead>
