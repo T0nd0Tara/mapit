@@ -29,3 +29,19 @@ export const addParamRow = async (page: Page, {
   await inputs.nth(0).fill(newParam.key);
   await inputs.nth(1).fill(newParam.value);
 }
+export const removeNthParamRow = async (page: Page, {
+  tableBody,
+  index,
+}: {
+  tableBody?: Awaited<ReturnType<typeof getParamsTable>>,
+  index?: number
+}) => {
+  tableBody ??= await getParamsTable(page);
+  const rowCount = await tableBody.locator('tr').count()
+  expect(rowCount).toBeGreaterThanOrEqual(2)
+  index ??= rowCount - 2; // -1 to convert size to last index, another -1 to get the last filled row
+
+  await tableBody.locator('tr').nth(index).locator('td > :first-child').last().click()
+
+  expect(await tableBody.locator('tr').count()).toBe(rowCount - 1)
+}
