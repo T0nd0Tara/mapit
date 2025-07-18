@@ -7,7 +7,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test("adding param in table adds it to uri", async ({ page }) => {
-  const uri = `http://${random_string()}/${random_string()}`
+  let uri = `http://${random_string()}/${random_string()}`
   const [_, tableBody] = await Promise.all([
     page.getByTestId('uri-input').fill(uri).then(() =>
       expect(page.getByTestId('uri-input')).toHaveValue(uri)
@@ -15,7 +15,11 @@ test("adding param in table adds it to uri", async ({ page }) => {
     getParamsTable(page),
   ]);
 
-  const newParam: IKeyVal = { key: random_string(), value: random_string() };
-  await addParamRow(page, { tableBody, newParam });
-  await expect(page.getByTestId('uri-input')).toHaveValue(`${uri}?${newParam.key}=${newParam.value}`)
+  for (let i = 0; i < 5; i++) {
+    const newParam: IKeyVal = { key: random_string(), value: random_string() };
+    await addParamRow(page, { tableBody, newParam });
+    const concatChar = i === 0 ? '?' : '&';
+    uri += `${concatChar}${newParam.key}=${newParam.value}`
+    await expect(page.getByTestId('uri-input')).toHaveValue(uri)
+  }
 });
