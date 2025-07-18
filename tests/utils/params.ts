@@ -20,13 +20,12 @@ export const addParamRow = async (page: Page, {
 }) => {
   tableBody ??= await getParamsTable(page);
   newParam ??= { key: random_string(), value: random_string() };
-  const lastRow = tableBody.locator('tr').last();
+  const rowCount = await tableBody.locator('tr').count()
+  const lastRow = tableBody.locator('tr').nth(rowCount - 1);
 
-  const inputs = lastRow.locator('input')
+  const inputs = lastRow.locator('td > input')
   expect(await inputs.count()).toBe(2);
 
-  await Promise.all([
-    inputs.first().fill(newParam.key),
-    inputs.last().fill(newParam.value),
-  ]);
+  await inputs.nth(0).fill(newParam.key);
+  await inputs.nth(1).fill(newParam.value);
 }
