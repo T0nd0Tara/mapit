@@ -11,6 +11,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "nwjs": "npm run build && nw",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "preview": "vite preview",
