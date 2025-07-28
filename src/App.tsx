@@ -40,7 +40,7 @@ export default function App() {
     body: useComState<unknown>(null),
   };
 
-  const [response, setResponse] = useState<unknown>("");
+  const [response, setResponse] = useState<string>("");
   // const [viewMethod, setViewMethod] = useState();
 
   const uri = useComState<string>("");
@@ -121,7 +121,7 @@ export default function App() {
       const res = await axios.request(getAxiosRequestConfig(request));
       setResponse(JSON.stringify(res.data, null, 2));
     } catch (err: unknown) {
-      setResponse(err);
+      setResponse((err as object).toString());
     }
   };
 
