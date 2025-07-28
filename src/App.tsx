@@ -122,7 +122,7 @@ export default function App() {
   };
 
   return (
-    <div className="w-dvw h-dvh">
+    <div className="w-dvw h-dvh p-3">
       <ResizablePanelGroup direction="vertical" style={{ height: "100%" }}>
         <ResizablePanel minSize={40}>
           <div className="flex space-x-2 mb-2">
