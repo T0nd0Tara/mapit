@@ -14,7 +14,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "preview": "vite preview",
-    "test": "npx playwright test"
+    "test": "npx playwright test",
+    "test:ui": "npx playwright test --ui"
   },
   "nodejs": true,
   "node-remote": "*://*",
