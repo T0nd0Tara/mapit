@@ -1,14 +1,12 @@
 import { HttpMethod } from "@/types/http";
 import { IState } from "@/types/state";
+import { IKeyValueObj } from "./key-value";
+import { NonUndefined } from "./utils";
 
-export interface IHeader {
-  key: string,
-  value: string,
-  enabled: boolean
-}
+export type IHeader = IKeyValueObj;
 export type IHeaders = IHeader[];
 
-export type IParam = IHeader;
+export type IParam = IKeyValueObj;
 export type IParams = IParam[];
 
 export interface IRequest {
@@ -19,4 +17,4 @@ export interface IRequest {
   headers?: IHeaders,
 }
 
-export type IRequestState = { [key in keyof IRequest]-?: IState<IRequest[key]> };
+export type IRequestState = { [key in keyof IRequest]-?: IState<NonUndefined<IRequest[key]>> };

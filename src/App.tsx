@@ -2,10 +2,6 @@ import { useEffect, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { useComState } from '@/utils/react'
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,9 +15,9 @@ import _ from "lodash"
 import { RequestConfigTabs } from "./components/request-config-tabs/request-config-tabs";
 import { HttpMethod } from "./types/http";
 import { IHeaders, IParams, IRequestState } from "./types/request";
-import { IKeyValueObj } from "./components/common/key-value-editable-table";
 import { indexOfOrUndefined } from "./utils/string";
 import { StringObject } from "./types/object";
+import { IKeyValueObj } from "./types/key-value";
 
 /*
 enum ViewMethod {
@@ -35,8 +31,8 @@ export default function App() {
   const request: IRequestState = {
     url: useComState(""),
     method: useComState<HttpMethod>(HttpMethod.GET),
-    params: useComState<IParams | undefined>([]),
-    headers: useComState<IHeaders | undefined>([]),
+    params: useComState<IParams>([]),
+    headers: useComState<IHeaders>([]),
     body: useComState<unknown>(null),
   };
 
@@ -126,46 +122,44 @@ export default function App() {
   };
 
   return (
-    <Card className="w-dvw h-dvh">
-      <CardContent className="space-y-4 p-4" style={{ height: "100%" }}>
-        <ResizablePanelGroup direction="vertical" style={{ height: "100%" }}>
-          <ResizablePanel minSize={40}>
-            <div className="flex space-x-2 mb-2">
-              <Select onValueChange={(value: string) => request.method.set(value as HttpMethod)} defaultValue={HttpMethod.GET}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {Object.keys(HttpMethod).map(method => (
-                    <SelectItem key={method} value={method}>{method}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Input
-                data-testid='uri-input'
-                type="text"
-                placeholder="Enter URL"
-                value={uri.value}
-                onChange={(e) => setRequestFromUri(e.target.value)}
-                className="flex-grow"
-              />
-              <Button onClick={sendRequest} variant="outline">Send</Button>
-            </div>
-
-            <RequestConfigTabs request={request}></RequestConfigTabs>
-
-          </ResizablePanel>
-          <ResizableHandle withHandle className="my-3" />
-          <ResizablePanel>
-            <Textarea
-              readOnly
-              placeholder="Response will appear here"
-              value={response}
-              className="w-full h-60"
+    <div className="w-dvw h-dvh">
+      <ResizablePanelGroup direction="vertical" style={{ height: "100%" }}>
+        <ResizablePanel minSize={40}>
+          <div className="flex space-x-2 mb-2">
+            <Select onValueChange={(value: string) => request.method.set(value as HttpMethod)} defaultValue={HttpMethod.GET}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.keys(HttpMethod).map(method => (
+                  <SelectItem key={method} value={method}>{method}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Input
+              data-testid='uri-input'
+              type="text"
+              placeholder="Enter URL"
+              value={uri.value}
+              onChange={(e) => setRequestFromUri(e.target.value)}
+              className="flex-grow"
             />
-          </ResizablePanel>
-        </ResizablePanelGroup>
-      </CardContent>
-    </Card>
+            <Button onClick={sendRequest} variant="outline">Send</Button>
+          </div>
+
+          <RequestConfigTabs request={request}></RequestConfigTabs>
+
+        </ResizablePanel>
+        <ResizableHandle withHandle className="my-3" />
+        <ResizablePanel>
+          <Textarea
+            readOnly
+            placeholder="Response will appear here"
+            value={response}
+            className="w-full h-60"
+          />
+        </ResizablePanel>
+      </ResizablePanelGroup>
+    </div>
   );
 }

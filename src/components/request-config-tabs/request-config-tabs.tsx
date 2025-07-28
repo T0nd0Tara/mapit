@@ -8,8 +8,8 @@ export function RequestConfigTabs({ request }: { request: IRequestState }) {
   return (
     <Tabs defaultValue="headers">
       <TabsList>
-        <TabsTrigger value="headers">Headers ({request.headers?.value.length})</TabsTrigger>
-        <TabsTrigger value="params">Params ({request.params?.value.length})</TabsTrigger>
+        <TabsTrigger value="headers">Headers ({request.headers.value.length})</TabsTrigger>
+        <TabsTrigger value="params">Params ({request.params.value.length})</TabsTrigger>
         <TabsTrigger value="body">Body</TabsTrigger>
       </TabsList>
       <TabsContent value="headers">
@@ -43,7 +43,7 @@ export function RequestConfigTabs({ request }: { request: IRequestState }) {
       <TabsContent value="body">
         <Textarea
           placeholder="Request Body (JSON)"
-          value={request.body.value}
+          value={request.body.value as string}
           onChange={(e) => request.body.set(e.target.value)}
           className="w-full h-40"
         />
