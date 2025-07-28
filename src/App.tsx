@@ -26,7 +26,7 @@ import _ from "lodash"
 import { IState } from "./types/state";
 import { RequestConfigTabs } from "./components/request-config-tabs/request-config-tabs";
 import { HttpMethod } from "./types/http";
-import { IHeader, IRequestState } from "./types/request";
+import { IHeader, IHeaders, IParams, IRequestState } from "./types/request";
 import { IKeyValueObj } from "./components/common/key-value-editable-table";
 import url from 'url'
 import { indexOfOrUndefined } from "./utils/string";
@@ -40,11 +40,12 @@ enum ViewMethod {
 export default function App() {
   const request: IRequestState = {
     url: useComState(""),
-    method: useComState(HttpMethod.GET),
-    params: useComState([]),
-    headers: useComState([]),
+    method: useComState<HttpMethod>(HttpMethod.GET),
+    params: useComState<IParams | undefined>([]),
+    headers: useComState<IHeaders | undefined>([]),
     body: useComState(null),
   };
+
   const [response, setResponse] = useState("");
   const [viewMethod, setViewMethod] = useState();
 
@@ -55,19 +56,43 @@ export default function App() {
       if (keyVal.enabled)
         prev[keyVal.key] = keyVal.value;
       return prev;
-    }, {});
+    }, {} as { [key: string]: string });
 
   const getAxiosRequestConfig = (request: IRequestState): AxiosRequestConfig<any> => ({
     // url: /^http[s]?:\/\//.test(request.url.value) ?
     //   request.url.value : `http://${request.url.value}`,
     url: request.url.value,
     method: request.method.value,
-    params: keyValToObject(request.params.value),
-    headers: keyValToObject(request.headers.value),
+    params: keyValToObject(request.params.value ?? []),
+    headers: keyValToObject(request.headers.value ?? []),
     data: request.body.value,
   })
   const uriFromRequest = (request: IRequestState): string =>
     axios.getUri(getAxiosRequestConfig(request));
+
+  const getParamString = (params: IKeyValueObj[]) =>
+    params.map(param => {
+      const value = param.value ? `=${param.value}` : "";
+      return `${param.key}${value}`
+    }).join('&')
+
+  // Set uri based on params change
+  useEffect(() => {
+    const questionMarkIndex: number | undefined = indexOfOrUndefined(uri.value, '?')
+    const paramsString: string = getParamString(request.params.value ?? []);
+    if (questionMarkIndex === undefined) {
+      if (paramsString) uri.set(`${uri.value}?${paramsString}`);
+      return;
+    }
+
+    const hashIndex: number | undefined = indexOfOrUndefined(uri.value, '#', questionMarkIndex)
+    const fragment = hashIndex === undefined ? "" : uri.value.substring(hashIndex);
+    uri.set(
+      uri.value.substring(0, questionMarkIndex + 1)
+      + paramsString
+      + fragment
+    )
+  }, [request.params.value])
 
 
   const setRequestFromUri = (newUri: string) => {
@@ -79,7 +104,7 @@ export default function App() {
     let params: IKeyValueObj[] = []
     if (questionMarkIndex !== undefined) {
       const hashIndex: number | undefined = indexOfOrUndefined(newUri, '#', questionMarkIndex);
-      params = newUri.substring(questionMarkIndex + 1, (hashIndex ?? newUri.length + 1) - 1)
+      params = newUri.substring(questionMarkIndex + 1, hashIndex ?? newUri.length)
         .split('&')
         .map((keyVal: string) => {
           const equalIndex: number | undefined = indexOfOrUndefined(keyVal, '=');
@@ -101,7 +126,7 @@ export default function App() {
     try {
       const res = await axios.request(getAxiosRequestConfig(request));
       setResponse(JSON.stringify(res.data, null, 2));
-    } catch (err) {
+    } catch (err: any) {
       setResponse(err.message);
     }
   };

@@ -19,4 +19,4 @@ export interface IRequest {
   headers?: IHeaders,
 };
 
-export type IRequestState = { [key in keyof IRequest]: IState<IRequest[key]> };
+export type IRequestState = { [key in keyof IRequest]-?: IState<IRequest[key]> };
