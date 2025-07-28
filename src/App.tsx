@@ -1,41 +1,35 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import axios, { AxiosRequestConfig } from "axios";
 import { useComState } from '@/utils/react'
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select, SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { IpcSocketConnectOpts } from "node:net";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "./components/ui/resizable";
 import _ from "lodash"
-import { IState } from "./types/state";
 import { RequestConfigTabs } from "./components/request-config-tabs/request-config-tabs";
 import { HttpMethod } from "./types/http";
-import { IHeader, IHeaders, IParams, IRequestState } from "./types/request";
+import { IHeaders, IParams, IRequestState } from "./types/request";
 import { IKeyValueObj } from "./components/common/key-value-editable-table";
-import url from 'url'
 import { indexOfOrUndefined } from "./utils/string";
+import { StringObject } from "./types/object";
 
+/*
 enum ViewMethod {
   PRETTY = 'Pretty',
   RAW = 'Raw',
   PREVIEW = 'Preview',
 }
+*/
 
 export default function App() {
   const request: IRequestState = {
@@ -43,22 +37,22 @@ export default function App() {
     method: useComState<HttpMethod>(HttpMethod.GET),
     params: useComState<IParams | undefined>([]),
     headers: useComState<IHeaders | undefined>([]),
-    body: useComState(null),
+    body: useComState<unknown>(null),
   };
 
-  const [response, setResponse] = useState("");
-  const [viewMethod, setViewMethod] = useState();
+  const [response, setResponse] = useState<unknown>("");
+  // const [viewMethod, setViewMethod] = useState();
 
   const uri = useComState<string>("");
 
-  const keyValToObject = (vals: IKeyValueObj[]): any =>
+  const keyValToObject = (vals: IKeyValueObj[]): StringObject =>
     vals.reduce((prev, keyVal: IKeyValueObj) => {
       if (keyVal.enabled)
         prev[keyVal.key] = keyVal.value;
       return prev;
-    }, {} as { [key: string]: string });
+    }, {} as StringObject);
 
-  const getAxiosRequestConfig = (request: IRequestState): AxiosRequestConfig<any> => ({
+  const getAxiosRequestConfig = (request: IRequestState): AxiosRequestConfig<unknown> => ({
     // url: /^http[s]?:\/\//.test(request.url.value) ?
     //   request.url.value : `http://${request.url.value}`,
     url: request.url.value,
@@ -67,7 +61,7 @@ export default function App() {
     headers: keyValToObject(request.headers.value ?? []),
     data: request.body.value,
   })
-  const uriFromRequest = (request: IRequestState): string =>
+  const _uriFromRequest = (request: IRequestState): string =>
     axios.getUri(getAxiosRequestConfig(request));
 
   const getParamString = (params: IKeyValueObj[]) =>
@@ -126,8 +120,8 @@ export default function App() {
     try {
       const res = await axios.request(getAxiosRequestConfig(request));
       setResponse(JSON.stringify(res.data, null, 2));
-    } catch (err: any) {
-      setResponse(err.message);
+    } catch (err: unknown) {
+      setResponse(err);
     }
   };
 

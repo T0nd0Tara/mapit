@@ -1,4 +1,4 @@
-import { test, expect, Page, Locator } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { random_string, random_int } from '../../utils/random';
 import { addParamRow, getParamsTable, IKeyVal, removeNthParamRow } from '../../utils/params';
 
@@ -51,5 +51,5 @@ test("removing param from table removes it in the uri", async ({ page }) => {
 
 
   await expect(page.getByTestId('uri-input'))
-    .toHaveValue(getFullUri(uri, params.filter((elem, ind) => ind !== indToRemove)));
+    .toHaveValue(getFullUri(uri, params.filter((_elem, ind) => ind !== indToRemove)));
 });

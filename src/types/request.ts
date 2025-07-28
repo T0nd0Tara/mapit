@@ -15,8 +15,8 @@ export interface IRequest {
   method: HttpMethod,
   url: string,
   params?: IParams,
-  body?: any,
+  body?: unknown,
   headers?: IHeaders,
-};
+}
 
 export type IRequestState = { [key in keyof IRequest]-?: IState<IRequest[key]> };
