@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { useComState } from '@/utils/react'
 import {
   Card,
@@ -115,11 +115,11 @@ export default function App() {
   }
 
 
-
   const sendRequest = async () => {
     try {
-      const res = await axios.request(getAxiosRequestConfig(request));
-      setResponse(JSON.stringify(res.data, null, 2));
+      const res: AxiosResponse<string> = await axios.request(getAxiosRequestConfig(request));
+      // setResponse(JSON.stringify(res.data, null, 2));
+      setResponse(res.data);
     } catch (err: unknown) {
       setResponse((err as object).toString());
     }
