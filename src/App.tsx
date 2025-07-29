@@ -113,9 +113,10 @@ export default function App() {
 
   const sendRequest = async () => {
     try {
-      const res: AxiosResponse<string> = await axios.request(getAxiosRequestConfig(request));
+      const res: AxiosResponse<unknown> = await axios.request(getAxiosRequestConfig(request));
       // setResponse(JSON.stringify(res.data, null, 2));
-      setResponse(res.data);
+      const resString: string = typeof res.data === 'string' ? res.data : JSON.stringify(res.data);
+      setResponse(resString);
     } catch (err: unknown) {
       setResponse((err as object).toString());
     }
@@ -144,7 +145,7 @@ export default function App() {
               onChange={(e) => setRequestFromUri(e.target.value)}
               className="flex-grow"
             />
-            <Button onClick={sendRequest} variant="outline">Send</Button>
+            <Button onClick={sendRequest} variant="outline" data-testid="send-request-button">Send</Button>
           </div>
 
           <RequestConfigTabs request={request}></RequestConfigTabs>
@@ -157,6 +158,7 @@ export default function App() {
             placeholder="Response will appear here"
             value={response}
             className="w-full h-60"
+            data-testid='response-output'
           />
         </ResizablePanel>
       </ResizablePanelGroup>

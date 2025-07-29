@@ -19,7 +19,7 @@ export const addParamRow = async (page: Page, {
   newParam?: IKeyVal
 }) => {
   tableBody ??= await getParamsTable(page);
-  newParam ??= { key: random_string(), value: random_string() };
+  newParam ??= { key: random_string({}), value: random_string({}) };
   const rowCount = await tableBody.locator('tr').count()
   const lastRow = tableBody.locator('tr').nth(rowCount - 1);
 
