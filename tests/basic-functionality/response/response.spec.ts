@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { random_json, random_string, random_url } from '../utils/random';
+import { random_json, random_string, random_url } from '../../utils/random';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
