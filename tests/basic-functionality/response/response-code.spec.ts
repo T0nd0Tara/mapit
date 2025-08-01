@@ -5,7 +5,7 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/');
 })
 
-test('request status code is shown', async ({ page }) => {
+test('response status code is shown', async ({ page }) => {
   const url: string = random_url({ fragment: false });
   const status = random_int({ min: 100, max: 599 })
 
