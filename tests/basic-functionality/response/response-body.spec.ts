@@ -5,7 +5,7 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/');
 })
 
-test('requst result is shown in the response field - json', async ({ page }) => {
+test('request result is shown in the response field - json', async ({ page }) => {
   const url: string = random_url({ fragment: false });
   const responseJson = random_json({});
 
@@ -20,7 +20,7 @@ test('requst result is shown in the response field - json', async ({ page }) => 
   await expect(page.getByTestId('response-output')).toHaveValue(JSON.stringify(responseJson))
 });
 
-test('requst result is shown in the response field - html', async ({ page }) => {
+test('request result is shown in the response field - html', async ({ page }) => {
   const url: string = random_url({ fragment: false });
   const responseHTML = `<div>${random_string({})}</div>`;
 
