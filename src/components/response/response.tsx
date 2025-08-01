@@ -3,6 +3,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useComState } from "@/utils/react";
 import { useEffect } from "react";
 import { ResponseTiming } from "./response-timing";
+import { ResponseStatusCode } from "./response-status-code";
 
 export function Response({ response, isRequestActive, ...props }:
   {
@@ -25,8 +26,9 @@ export function Response({ response, isRequestActive, ...props }:
     <div {...props}>
       <div className="flex mb-2">
         <div className="ms-1 me-auto"></div>
-        <div className="me-1">
-          <ResponseTiming timing={response?.timing}></ResponseTiming>
+        <div className="me-1 flex gap-2">
+          {response && <ResponseStatusCode statusCode={response.res.status} statusText={response.res.statusText} />}
+          {response?.timing && <ResponseTiming timing={response.timing} />}
         </div>
       </div>
       <Textarea
