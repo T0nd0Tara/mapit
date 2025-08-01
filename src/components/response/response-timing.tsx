@@ -7,6 +7,10 @@ export function ResponseTiming({
 
   const totalTime = timing.responseEnd - timing.startTime;
   return (
-    <div>{totalTime} ms</div>
+    <div
+      data-testid="response-timing"
+    >
+      {totalTime} ms
+    </div>
   )
 }
