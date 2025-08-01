@@ -7,6 +7,8 @@ export function ResponseStatusCode({
   statusText: string
 }) {
   return (
-    <div {...props}>{statusCode} {statusText}</div>
+    <div {...props}
+      data-testid="response-status-code"
+    >{statusCode} {statusText}</div>
   )
 }
