@@ -22,6 +22,7 @@ export function random_string({
   return result;
 }
 
+// Produces a random int in the range [min, max]. i.e. inclusive
 export function random_int({ min, max }: { min?: number, max?: number }) {
   min ??= 0
   min = _.toInteger(min);
