@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { useComState } from '@/utils/react'
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -18,6 +17,8 @@ import { IHeaders, IParams, IRequestState } from "./types/request";
 import { indexOfOrUndefined } from "./utils/string";
 import { StringObject } from "./types/object";
 import { IKeyValueObj } from "./types/key-value";
+import { fetchWithTiming } from "./utils/fetch";
+import { isNullOrUndefined } from 'is-what';
 
 /*
 enum ViewMethod {
@@ -36,7 +37,7 @@ export default function App() {
     body: useComState<unknown>(null),
   };
 
-  const [response, setResponse] = useState<string>("");
+  const response = useComState<string>("");
   // const [viewMethod, setViewMethod] = useState();
 
   const uri = useComState<string>("");
@@ -47,18 +48,6 @@ export default function App() {
         prev[keyVal.key] = keyVal.value;
       return prev;
     }, {} as StringObject);
-
-  const getAxiosRequestConfig = (request: IRequestState): AxiosRequestConfig<unknown> => ({
-    // url: /^http[s]?:\/\//.test(request.url.value) ?
-    //   request.url.value : `http://${request.url.value}`,
-    url: request.url.value,
-    method: request.method.value,
-    params: keyValToObject(request.params.value ?? []),
-    headers: keyValToObject(request.headers.value ?? []),
-    data: request.body.value,
-  })
-  const _uriFromRequest = (request: IRequestState): string =>
-    axios.getUri(getAxiosRequestConfig(request));
 
   const getParamString = (params: IKeyValueObj[]) =>
     params.map(param => {
@@ -113,12 +102,18 @@ export default function App() {
 
   const sendRequest = async () => {
     try {
-      const res: AxiosResponse<unknown> = await axios.request(getAxiosRequestConfig(request));
-      // setResponse(JSON.stringify(res.data, null, 2));
-      const resString: string = typeof res.data === 'string' ? res.data : JSON.stringify(res.data);
-      setResponse(resString);
+      const { res, timing } = await fetchWithTiming(
+        uri.value,
+        {
+          headers: keyValToObject(request.headers.value),
+          body: isNullOrUndefined(request.body.value) ? null : JSON.stringify(request.body.value),
+        }
+      );
+
+      response.set(await res.text());
+
     } catch (err: unknown) {
-      setResponse((err as object).toString());
+      response.set((err as object).toString());
     }
   };
 
@@ -156,7 +151,7 @@ export default function App() {
           <Textarea
             readOnly
             placeholder="Response will appear here"
-            value={response}
+            value={response.value}
             className="w-full h-60"
             data-testid='response-output'
           />
