@@ -46,7 +46,7 @@ test("removing param from table removes it in the uri", async ({ page }) => {
   }
 
   await expect(page.getByTestId('uri-input')).toHaveValue(getFullUri(uri, params))
-  const indToRemove = random_int({ max: paramsToAdd })
+  const indToRemove = random_int({ max: paramsToAdd - 1 })
   await removeNthParamRow(page, { tableBody, index: indToRemove })
 
 
