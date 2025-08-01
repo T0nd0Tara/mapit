@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { useComState } from '@/utils/react'
 import { Input } from "@/components/ui/input";
@@ -10,6 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "./components/ui/resizable";
+import { Response } from '@/components/response/response';
 import _ from "lodash"
 import { RequestConfigTabs } from "./components/request-config-tabs/request-config-tabs";
 import { HttpMethod } from "./types/http";
@@ -17,7 +18,7 @@ import { IHeaders, IParams, IRequestState } from "./types/request";
 import { indexOfOrUndefined } from "./utils/string";
 import { StringObject } from "./types/object";
 import { IKeyValueObj } from "./types/key-value";
-import { fetchWithTiming } from "./utils/fetch";
+import { fetchWithTiming, IFetchWithTiming } from "./utils/fetch";
 import { isNullOrUndefined } from 'is-what';
 
 /*
@@ -37,7 +38,8 @@ export default function App() {
     body: useComState<unknown>(null),
   };
 
-  const response = useComState<string>("");
+  const response = useComState<IFetchWithTiming | null>(null);
+  const [isRequestActive, requestTransition] = useTransition();
   // const [viewMethod, setViewMethod] = useState();
 
   const uri = useComState<string>("");
@@ -100,21 +102,25 @@ export default function App() {
   }
 
 
-  const sendRequest = async () => {
-    try {
-      const { res, timing } = await fetchWithTiming(
-        uri.value,
-        {
-          headers: keyValToObject(request.headers.value),
-          body: isNullOrUndefined(request.body.value) ? null : JSON.stringify(request.body.value),
-        }
-      );
+  const sendRequest = () => {
+    requestTransition(async () => {
+      let res = null
+      try {
+        res = await fetchWithTiming(
+          uri.value,
+          {
+            headers: keyValToObject(request.headers.value),
+            body: isNullOrUndefined(request.body.value) ? null : JSON.stringify(request.body.value),
+          }
+        );
+      } catch (_err: unknown) {
+        // TODO: If there's an error, we want to see it. Replace `null`
+      }
 
-      response.set(await res.text());
-
-    } catch (err: unknown) {
-      response.set((err as object).toString());
-    }
+      requestTransition(() => {
+        response.set(res);
+      });
+    });
   };
 
   return (
@@ -148,13 +154,7 @@ export default function App() {
         </ResizablePanel>
         <ResizableHandle withHandle className="my-3" />
         <ResizablePanel>
-          <Textarea
-            readOnly
-            placeholder="Response will appear here"
-            value={response.value}
-            className="w-full h-60"
-            data-testid='response-output'
-          />
+          <Response response={response.value} isRequestActive={isRequestActive} />
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>
