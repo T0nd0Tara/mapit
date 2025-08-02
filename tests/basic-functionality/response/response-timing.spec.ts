@@ -6,7 +6,7 @@ test.beforeEach(async ({ page }) => {
 })
 
 test('response timing is shown', async ({ page }) => {
-  const url: string = random_url({ fragment: false });
+  const url: string = random_url({});
 
   await page.getByTestId('uri-input').fill(url);
   await page.route(url, async route => {

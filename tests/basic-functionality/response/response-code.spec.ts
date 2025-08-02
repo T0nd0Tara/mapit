@@ -6,7 +6,7 @@ test.beforeEach(async ({ page }) => {
 })
 
 test('response status code is shown', async ({ page }) => {
-  const url: string = random_url({ fragment: false });
+  const url: string = random_url({});
   const status = random_int({ min: 100, max: 599 })
 
   await page.getByTestId('uri-input').fill(url);

@@ -6,7 +6,7 @@ test.beforeEach(async ({ page }) => {
 })
 
 test('response body is shown in the response field - json', async ({ page }) => {
-  const url: string = random_url({ fragment: false });
+  const url: string = random_url({});
   const responseJson = random_json({});
 
   await page.getByTestId('uri-input').fill(url);
@@ -21,7 +21,7 @@ test('response body is shown in the response field - json', async ({ page }) => 
 });
 
 test('response body is shown in the response field - html', async ({ page }) => {
-  const url: string = random_url({ fragment: false });
+  const url: string = random_url({});
   const responseHTML = `<div>${random_string({})}</div>`;
 
   await page.getByTestId('uri-input').fill(url);
