@@ -34,8 +34,8 @@ export function random_int({ min, max }: { min?: number, max?: number }) {
 
 export function random_url({
   path = true,
-  param = true,
-  fragment = true,
+  param = false,
+  fragment = false,
 }: {
   path?: boolean,
   param?: boolean,

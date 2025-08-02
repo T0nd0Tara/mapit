@@ -127,7 +127,7 @@ export default function App() {
     <div className="w-dvw h-dvh p-3">
       <ResizablePanelGroup direction="vertical" style={{ height: "100%" }}>
         <ResizablePanel minSize={40}>
-          <div className="flex space-x-2 mb-2">
+          <form className="flex space-x-2 mb-2" onSubmit={(e) => { e.preventDefault(); sendRequest(); }}>
             <Select onValueChange={(value: string) => request.method.set(value as HttpMethod)} defaultValue={HttpMethod.GET}>
               <SelectTrigger>
                 <SelectValue />
@@ -146,8 +146,8 @@ export default function App() {
               onChange={(e) => setRequestFromUri(e.target.value)}
               className="flex-grow"
             />
-            <Button onClick={sendRequest} variant="outline" data-testid="send-request-button">Send</Button>
-          </div>
+            <Button type="submit" variant="outline" data-testid="send-request-button">Send</Button>
+          </form>
 
           <RequestConfigTabs request={request}></RequestConfigTabs>
 
