@@ -111,6 +111,7 @@ export default function App() {
           {
             headers: keyValToObject(request.headers.value),
             body: isNullOrUndefined(request.body.value) ? null : JSON.stringify(request.body.value),
+            method: request.method.value,
           }
         );
       } catch (_err: unknown) {
@@ -128,13 +129,18 @@ export default function App() {
       <ResizablePanelGroup direction="vertical" style={{ height: "100%" }}>
         <ResizablePanel minSize={40}>
           <form className="flex space-x-2 mb-2" onSubmit={(e) => { e.preventDefault(); sendRequest(); }}>
-            <Select onValueChange={(value: string) => request.method.set(value as HttpMethod)} defaultValue={HttpMethod.GET}>
-              <SelectTrigger>
+            <Select
+              onValueChange={(value: string) => request.method.set(value as HttpMethod)}
+              defaultValue={HttpMethod.GET}
+            >
+              <SelectTrigger
+                data-testid="method-select"
+              >
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 {Object.keys(HttpMethod).map(method => (
-                  <SelectItem key={method} value={method}>{method}</SelectItem>
+                  <SelectItem key={method} value={method} data-testid={"method-option-" + method.toLowerCase()}>{method}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
