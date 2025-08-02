@@ -11,6 +11,8 @@ export default tseslint.config(
   {
     ignores: [
       'dist',
+      'test-result',
+      'playwright-report',
     ],
   },
   {

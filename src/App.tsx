@@ -1,5 +1,4 @@
-import { useEffect, useState, useTransition } from "react";
-import { Textarea } from "@/components/ui/textarea";
+import { useEffect, useTransition } from "react";
 import { useComState } from '@/utils/react'
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
