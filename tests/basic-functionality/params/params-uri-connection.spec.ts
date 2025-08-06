@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { random_string, random_int } from '../../utils/random';
-import { addParamRow, getParamsTable, IKeyVal, removeNthParamRow } from '../../utils/params';
+import { random_string, random_int, random_url } from '../../utils/random';
+import { addParamRow, getKeyValuesFromTable, getParamsTable, IKeyVal, removeNthParamRow } from '../../utils/params';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/')
@@ -52,4 +52,28 @@ test("removing param from table removes it in the uri", async ({ page }) => {
 
   await expect(page.getByTestId('uri-input'))
     .toHaveValue(getFullUri(uri, params.filter((_elem, ind) => ind !== indToRemove)));
+});
+
+test("adding param in uri field adds it to table", async ({ page }) => {
+  const url = random_url({});
+  const param: IKeyVal = {
+    key: random_string({}),
+    value: random_string({}),
+  }
+
+  const uri = `${url}?${param.key}=${param.value}`
+
+  const [_, tableBody] = await Promise.all([
+    page.getByTestId('uri-input').pressSequentially(uri).then(() =>
+      expect(page.getByTestId('uri-input')).toHaveValue(uri)
+    ),
+    getParamsTable(page),
+  ]);
+
+  const actualKeyValues: IKeyVal[] = await getKeyValuesFromTable({ tableBody });
+
+  expect(actualKeyValues).toHaveLength(1);
+  expect(actualKeyValues[0].key).toBe(param.key);
+  expect(actualKeyValues[0].value).toBe(param.value);
+
 });

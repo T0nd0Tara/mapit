@@ -45,3 +45,23 @@ export const removeNthParamRow = async (page: Page, {
 
   expect(await tableBody.locator('tr').count()).toBe(rowCount - 1)
 }
+
+export const getKeyValuesFromTable = async ({
+  tableBody,
+}: {
+  tableBody: Awaited<ReturnType<typeof getParamsTable>>,
+}): Promise<IKeyVal[]> => {
+  const rows = await tableBody.locator('tr').all()
+  const keyValues: Promise<IKeyVal>[] = rows.slice(0, rows.length - 1).map(async (row) => {
+    const inputs = await row.locator('td > input').all()
+    const [key, value] = await Promise.all([
+      inputs[0].inputValue(),
+      inputs[1].inputValue(),
+    ])
+    return {
+      key, value
+    }
+  })
+
+  return await Promise.all(keyValues);
+}

@@ -6,7 +6,7 @@ test.beforeEach(async ({ page }) => {
 })
 test('allow to insert invalid uri', async ({ page }) => {
   const invalid_uri = `${random_string({})}://??${random_string({})}??????==#=##dsafasdf###`
-  await page.getByTestId('uri-input').fill(invalid_uri)
+  await page.getByTestId('uri-input').pressSequentially(invalid_uri, { delay: 100 })
   await expect(page.getByTestId('uri-input')).toHaveValue(invalid_uri)
 });
 
