@@ -11,6 +11,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:nw": "npm run build && nwbuild ./dist --glob false --outDir build",
     "nwjs": "npm run build && nw",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -54,11 +55,13 @@
     "eslint": "^9.32.0",
     "eslint-plugin-react-refresh": "^0.4.5",
     "nw": "^0.100.1",
-    "nw-builder": "^4.13.14",
+    "nw-builder": "4.13.16",
+    "tsx": "^4.20.3",
     "tw-animate-css": "^1.3.4",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.38.0",
     "vite": "^5.1.6",
-    "vite-plugin-node-polyfills": "^0.23.0"
+    "vite-plugin-node-polyfills": "^0.23.0",
+    "vite-plugin-static-copy": "^3.1.1"
   }
 }
