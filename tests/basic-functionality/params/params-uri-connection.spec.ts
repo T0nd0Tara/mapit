@@ -62,11 +62,9 @@ test("adding param in uri field adds it to table", async ({ page }) => {
   }
 
   const uri = `${url}?${param.key}=${param.value}`
-
+  await page.getByTestId('uri-input').pressSequentially(uri);
   const [_, tableBody] = await Promise.all([
-    page.getByTestId('uri-input').pressSequentially(uri).then(() =>
-      expect(page.getByTestId('uri-input')).toHaveValue(uri)
-    ),
+    expect(page.getByTestId('uri-input')).toHaveValue(uri),
     getParamsTable(page),
   ]);
 

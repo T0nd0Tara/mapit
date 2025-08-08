@@ -56,10 +56,12 @@ export default function App() {
       return `${param.key}${value}`
     }).join('&')
 
+  // We want to differentiate between this component changing the params, and the table component. so we send down this function
   // Set uri based on params change
-  useEffect(() => {
+  const setParams = (params: IRequestState['params']['value']) => {
+    request.params.set(params)
     const questionMarkIndex: number | undefined = indexOfOrUndefined(uri.value, '?')
-    const paramsString: string = getParamString(request.params.value ?? []);
+    const paramsString: string = getParamString(params ?? []);
     if (questionMarkIndex === undefined) {
       if (paramsString) uri.set(`${uri.value}?${paramsString}`);
       return;
@@ -72,7 +74,7 @@ export default function App() {
       + paramsString
       + fragment
     )
-  }, [request.params.value])
+  }
 
 
   const setRequestFromUri = (newUri: string) => {
@@ -154,7 +156,7 @@ export default function App() {
             <Button type="submit" variant="outline" data-testid="send-request-button">Send</Button>
           </form>
 
-          <RequestConfigTabs request={request}></RequestConfigTabs>
+          <RequestConfigTabs request={{ ...request, params: { value: request.params.value, ["set"]: setParams } }}></RequestConfigTabs>
 
         </ResizablePanel>
         <ResizableHandle withHandle className="my-3" />
