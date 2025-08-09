@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import { IKeyVal } from './params';
 
 export function random_string({
   length = 10,
@@ -58,4 +59,8 @@ export function random_json({ depth = 2, fieldsCount = 5 }:
     out[random_string({})] = depth <= 0 ? random_string({}) : random_json({ depth: depth - 1, fieldsCount })
   }
   return out;
+}
+
+export function random_key_val(opts: Parameters<typeof random_string>[0]): IKeyVal {
+  return { key: random_string(opts), value: random_string(opts) };
 }

@@ -1,5 +1,5 @@
 import { expect, Page, Locator } from '@playwright/test';
-import { random_string } from './random';
+import { random_key_val } from './random';
 
 export interface IKeyVal {
   key: string,
@@ -19,7 +19,7 @@ export const addParamRow = async (page: Page, {
   newParam?: IKeyVal
 }) => {
   tableBody ??= await getParamsTable(page);
-  newParam ??= { key: random_string({}), value: random_string({}) };
+  newParam ??= random_key_val({});
   const rowCount = await tableBody.locator('tr').count()
   const lastRow = tableBody.locator('tr').nth(rowCount - 1);
 
