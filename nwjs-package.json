@@ -1,7 +1,8 @@
 {
-  "name": "mapit",
+  "name": "Mapit",
   "main": "index.html",
   "window": {
+    "icon": "logo.png",
     "width": 1024,
     "height": 768
   }
