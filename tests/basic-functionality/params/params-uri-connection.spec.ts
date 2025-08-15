@@ -1,6 +1,8 @@
 import { test, expect } from '@playwright/test';
 import { random_string, random_int, random_url } from '../../utils/random';
-import { addParamRow, getKeyValuesFromTable, getParamsTable, IKeyVal, removeNthParamRow } from '../../utils/params';
+import { addParamRow, IKeyVal, removeNthParamRow } from '../../utils/params';
+import { getParamsTable } from '../../utils/get-element'
+import { getKeyValuesFromTable } from '../../utils/key-value-table'
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/')

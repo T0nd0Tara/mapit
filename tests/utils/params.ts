@@ -1,15 +1,11 @@
-import { expect, Page, Locator } from '@playwright/test';
+import { Page } from '@playwright/test';
 import { random_key_val } from './random';
 import { addRow, removeNthRow } from './key-value-table';
+import { getParamsTable } from './get-element';
 
 export interface IKeyVal {
   key: string,
   value: string,
-}
-
-export const getParamsTable = async (page: Page): Promise<Locator> => {
-  await page.getByRole('tab', { name: /Params/ }).click();
-  return page.getByTestId('params-key-value-table').first().locator('tbody');
 }
 
 export const addParamRow = async (page: Page, {

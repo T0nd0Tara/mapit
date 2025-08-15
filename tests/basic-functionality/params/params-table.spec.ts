@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { addParamRow, getParamsTable } from '../../utils/params';
+import { addParamRow } from '../../utils/params';
+import { getParamsTable } from '../../utils/get-element'
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/')
