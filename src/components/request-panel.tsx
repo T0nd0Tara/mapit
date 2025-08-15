@@ -120,8 +120,8 @@ export default function RequestPanel() {
   return (
     <div className="w-dvw h-dvh p-3">
       <ResizablePanelGroup direction="vertical" className="h-full">
-        <ResizablePanel minSize={40}>
-          <form className="flex space-x-2 mb-2" onSubmit={(e) => { e.preventDefault(); sendRequest(); }}>
+        <ResizablePanel minSize={40} className="flex flex-col">
+          <form className="shrink flex space-x-2 mb-2" onSubmit={(e) => { e.preventDefault(); sendRequest(); }}>
             <Select
               onValueChange={(value: string) => request.method.set(value as HttpMethod)}
               defaultValue={HttpMethod.GET}
@@ -148,11 +148,14 @@ export default function RequestPanel() {
             <Button type="submit" variant="outline" data-testid="send-request-button">Send</Button>
           </form>
 
-          <RequestConfigTabs request={{ ...request, params: { value: request.params.value, "set": setParams } }}></RequestConfigTabs>
+          <RequestConfigTabs
+            request={{ ...request, params: { value: request.params.value, "set": setParams } }}
+            className="grow"
+          />
 
         </ResizablePanel>
         <ResizableHandle withHandle className="my-3" />
-        <ResizablePanel>
+        <ResizablePanel defaultSize={30} minSize={10}>
           <Response response={response.value} isRequestActive={isRequestActive} className="h-full" />
         </ResizablePanel>
       </ResizablePanelGroup>
