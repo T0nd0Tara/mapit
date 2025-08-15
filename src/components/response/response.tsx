@@ -20,11 +20,11 @@ export function Response({ response, isRequestActive, ...props }:
   }, [response?.res.text]);
 
   props.className ??= "";
-  props.className += " w-full"
+  props.className += " flex flex-col w-full"
 
   return (
     <div {...props}>
-      <div className="flex mb-2">
+      <div className="shrink flex mb-2">
         <div className="ms-1 me-auto"></div>
         <div className="me-1 flex gap-2">
           {response && <ResponseStatusCode statusCode={response.res.status} statusText={response.res.statusText} />}
@@ -35,7 +35,7 @@ export function Response({ response, isRequestActive, ...props }:
         readOnly
         placeholder="Response will appear here"
         value={body.value}
-        className="w-full h-60"
+        className="w-full grow"
         data-testid='response-output'
       />
     </div>

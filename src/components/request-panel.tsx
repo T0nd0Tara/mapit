@@ -153,7 +153,7 @@ export default function RequestPanel() {
         </ResizablePanel>
         <ResizableHandle withHandle className="my-3" />
         <ResizablePanel>
-          <Response response={response.value} isRequestActive={isRequestActive} />
+          <Response response={response.value} isRequestActive={isRequestActive} className="h-full" />
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>
