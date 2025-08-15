@@ -119,7 +119,7 @@ export default function RequestPanel() {
 
   return (
     <div className="w-dvw h-dvh p-3">
-      <ResizablePanelGroup direction="vertical" style={{ height: "100%" }}>
+      <ResizablePanelGroup direction="vertical" className="h-full">
         <ResizablePanel minSize={40}>
           <form className="flex space-x-2 mb-2" onSubmit={(e) => { e.preventDefault(); sendRequest(); }}>
             <Select
@@ -148,7 +148,7 @@ export default function RequestPanel() {
             <Button type="submit" variant="outline" data-testid="send-request-button">Send</Button>
           </form>
 
-          <RequestConfigTabs request={{ ...request, params: { value: request.params.value, ["set"]: setParams } }}></RequestConfigTabs>
+          <RequestConfigTabs request={{ ...request, params: { value: request.params.value, "set": setParams } }}></RequestConfigTabs>
 
         </ResizablePanel>
         <ResizableHandle withHandle className="my-3" />
