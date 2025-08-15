@@ -13,7 +13,7 @@ export function RequestConfigTabs({
   }) {
   return (
     <Tabs defaultValue="headers" {...props}>
-      <TabsList>
+      <TabsList className="gap-1">
         <TabsTrigger value="headers">Headers ({request.headers.value.length})</TabsTrigger>
         <TabsTrigger value="params">Params ({request.params.value.length})</TabsTrigger>
         <TabsTrigger value="body">Body</TabsTrigger>
