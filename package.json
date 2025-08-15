@@ -12,6 +12,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "build:nw": "npm run build && nwbuild ./dist --glob false --outDir build",
+    "build:nw-dev": "npm run build:nw -- --flavor=sdk",
     "nwjs": "npm run build && nw",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
