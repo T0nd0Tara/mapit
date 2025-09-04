@@ -19,3 +19,9 @@ pay for all of the features, like, why? It is just a glorified `curl` command...
 
 Mapit, is suppose to solve these problems.
 It should just be easy to create and save requests
+
+## Tasks
+- [ ] Different ways to view response (raw, pretty)
+- [ ] Show response headers
+- [ ] File explorer
+- [ ] convert request to different types of program languages
