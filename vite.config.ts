@@ -2,7 +2,6 @@ import { defineConfig } from 'vite'
 import path from 'node:path'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
-import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 // https://vitejs.dev/config/
@@ -10,7 +9,6 @@ export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
-    nodePolyfills(),
     viteStaticCopy({
       targets: [
         { src: 'nwjs-package.json', dest: '.', rename: 'package.json' }
@@ -29,5 +27,9 @@ export default defineConfig({
         api: 'modern-compiler' // or "modern"
       }
     }
+  },
+  optimizeDeps: {
+    // Prevent esbuild pre-bundling from injecting polyfills
+    exclude: ['fs', 'fs/promises', 'path', 'os', 'crypto', 'stream', 'util'],
   },
 })

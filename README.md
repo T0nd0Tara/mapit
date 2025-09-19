@@ -25,3 +25,4 @@ It should just be easy to create and save requests
 - [ ] Show response headers
 - [ ] File explorer
 - [ ] convert request to different types of program languages
+- [ ] show that request is pending
