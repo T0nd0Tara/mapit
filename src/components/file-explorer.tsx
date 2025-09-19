@@ -1,8 +1,5 @@
 import { useAsync } from "react-async"
-// // @ts-expect-error: it wouldn't find node packages 
-// import fs from 'node:fs/promises';
-const req = (window as any).require;
-const fs = req('node:fs').promises;
+import { fs } from "@/utils/node.ts"
 
 async function getFiles() {
   const files = []
