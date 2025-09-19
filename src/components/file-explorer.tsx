@@ -16,7 +16,6 @@ export function FileExplorer({
 }: React.ComponentProps<"div">
 ) {
   const configState: ConfigProviderState = useConfig();
-  console.dir(configState)
   if (configState.isPending) return <> No Pablo espanol </>;
   const config: Config = configState.data!;
 

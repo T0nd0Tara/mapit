@@ -18,7 +18,6 @@ export function ConfigProvider({
 
 
   useEffect(() => {
-    console.log('config changed')
     if (config.data) writeConfigHook.run(config.data);
   }, [config]);
 
