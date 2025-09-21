@@ -21,6 +21,17 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    chunkSizeWarningLimit: 700,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // "utils": ['is-what', 'lodash', 'json5'],
+          // "radix": ['@radix-ui', 'clsx', 'class-variance-authority']
+        }
+      }
+    }
+  },
   css: {
     preprocessorOptions: {
       scss: {
