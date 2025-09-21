@@ -3,15 +3,28 @@ import { fs, path } from "@/utils/node.ts"
 import { Config, getConfig } from "@/utils/mapit-configs";
 import { ConfigProviderState, useConfig } from "./providers/config-provider";
 import { useCallback } from "react";
-async function getFiles(routesDir: string) {
+import { TreeView, TreeDataItem } from '@/components/ui/tree-view';
+import type { Dirent } from "fs";
+async function getFileTree(routesDir: string): Promise<TreeDataItem> {
   await fs.mkdir(routesDir, { recursive: true });
+  const recursiveGetFileTree = async (dir: Dirent<string> | string): Promise<TreeDataItem> => {
+    const fullPath: string = typeof dir === 'string' ? dir : path.resolve(dir.parentPath, dir.name);
+    let children: TreeDataItem[] | undefined = undefined;
 
-  const files = []
-  for await (const file of fs.glob(path.join(routesDir, '**', '*.json5'),)) {
-    files.push(file);
-  }
-  return files;
+    if (typeof dir === 'string' || dir.isDirectory()) {
+      const childFiles = await fs.readdir(fullPath, { recursive: false, withFileTypes: true });
+      children = await Promise.all(childFiles.map(child => recursiveGetFileTree(child)));
+    }
+
+    return {
+      id: fullPath,
+      name: typeof dir === 'string' ? path.basename(dir) : dir.name,
+      children
+    };
+  };
+  return await recursiveGetFileTree(routesDir);
 }
+
 export function FileExplorer({
   ...props
 }: React.ComponentProps<"div">
@@ -20,13 +33,14 @@ export function FileExplorer({
   if (configState.isPending) return <> No Pablo espanol </>;
   const config: Config = configState.data!;
 
-  const files = useAsync({
-    promiseFn: useCallback(() => getFiles(config.routesDir), [config.routesDir])
+  const fileTree = useAsync({
+    promiseFn: useCallback(() => getFileTree(config.routesDir), [config.routesDir])
   });
 
+  if (fileTree.isPending) return <> Reading routes folder </>;
+  console.log(fileTree.data);
 
   return (
-    <div {...props}>
-    </div>
+    <TreeView {...props} data={fileTree.data!} />
   )
 }

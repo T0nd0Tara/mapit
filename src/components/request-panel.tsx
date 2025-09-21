@@ -118,48 +118,46 @@ export default function RequestPanel() {
   };
 
   return (
-    <div className="w-dvw h-dvh p-3">
-      <ResizablePanelGroup direction="vertical" className="h-full">
-        <ResizablePanel minSize={40} className="flex flex-col">
-          <form className="shrink flex space-x-2 mb-2" onSubmit={(e) => { e.preventDefault(); sendRequest(); }}>
-            <Select
-              onValueChange={(value: string) => request.method.set(value as HttpMethod)}
-              defaultValue={HttpMethod.GET}
+    <ResizablePanelGroup direction="vertical" className="h-full">
+      <ResizablePanel minSize={40} className="flex flex-col">
+        <form className="shrink flex space-x-2 mb-2" onSubmit={(e) => { e.preventDefault(); sendRequest(); }}>
+          <Select
+            onValueChange={(value: string) => request.method.set(value as HttpMethod)}
+            defaultValue={HttpMethod.GET}
+          >
+            <SelectTrigger
+              data-testid="method-select"
             >
-              <SelectTrigger
-                data-testid="method-select"
-              >
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {Object.keys(HttpMethod).map(method => (
-                  <SelectItem key={method} value={method} data-testid={"method-option-" + method.toLowerCase()}>{method}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Input
-              data-testid='uri-input'
-              type="text"
-              placeholder="Enter URL"
-              value={uri.value}
-              onChange={(e) => setRequestFromUri(e.target.value)}
-              className="flex-grow"
-            />
-            <Button type="submit" variant="outline" data-testid="send-request-button">Send</Button>
-          </form>
-
-          <RequestConfigTabs
-            request={{ ...request, params: { value: request.params.value, "set": setParams } }}
-            className="grow"
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {Object.keys(HttpMethod).map(method => (
+                <SelectItem key={method} value={method} data-testid={"method-option-" + method.toLowerCase()}>{method}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Input
+            data-testid='uri-input'
+            type="text"
+            placeholder="Enter URL"
+            value={uri.value}
+            onChange={(e) => setRequestFromUri(e.target.value)}
+            className="flex-grow"
           />
+          <Button type="submit" variant="outline" data-testid="send-request-button">Send</Button>
+        </form>
 
-        </ResizablePanel>
-        <ResizableHandle withHandle className="my-3" />
-        <ResizablePanel defaultSize={30} minSize={10}>
-          <Response response={response.value} isRequestActive={isRequestActive} className="h-full" />
-        </ResizablePanel>
-      </ResizablePanelGroup>
-    </div>
+        <RequestConfigTabs
+          request={{ ...request, params: { value: request.params.value, "set": setParams } }}
+          className="grow"
+        />
+
+      </ResizablePanel>
+      <ResizableHandle withHandle className="my-3" />
+      <ResizablePanel defaultSize={30} minSize={10}>
+        <Response response={response.value} isRequestActive={isRequestActive} className="h-full" />
+      </ResizablePanel>
+    </ResizablePanelGroup>
   );
 }
 
