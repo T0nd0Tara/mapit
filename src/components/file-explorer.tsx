@@ -18,7 +18,11 @@ async function getFileTree(routesDir: string): Promise<TreeDataItem> {
 
     return {
       id: fullPath,
-      name: typeof dir === 'string' ? path.basename(dir) : dir.name,
+      name: typeof dir === 'string'
+        ? path.basename(dir)
+        : dir.isFile()
+          ? path.parse(dir.name).name
+          : dir.name,
       children
     };
   };
@@ -39,6 +43,7 @@ export function FileExplorer({
 
   if (fileTree.isPending) return <> Reading routes folder </>;
   const treeData = fileTree.data!;
+
   return (
     <TreeView {...props} data={treeData.children!} />
   )
