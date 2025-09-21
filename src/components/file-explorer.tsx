@@ -38,9 +38,8 @@ export function FileExplorer({
   });
 
   if (fileTree.isPending) return <> Reading routes folder </>;
-  console.log(fileTree.data);
-
+  const treeData = fileTree.data!;
   return (
-    <TreeView {...props} data={fileTree.data!} />
+    <TreeView {...props} data={treeData.children!} />
   )
 }
