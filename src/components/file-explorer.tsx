@@ -29,6 +29,26 @@ async function getFileTree(routesDir: string): Promise<TreeDataItem> {
   return await recursiveGetFileTree(routesDir);
 }
 
+// This component exists only because of the 'Rendered more hooks than during the previous render.' error
+function FileExplorerWithConfig({
+  config,
+  ...props
+}: React.ComponentProps<"div"> & { config: Config }) {
+  const fileTree = useAsync({
+    promiseFn: useCallback(() => getFileTree(config.routesDir), [config.routesDir])
+  });
+  const onSelectChange = useCallback((item: TreeDataItem | undefined) => console.log(item), [])
+
+  if (fileTree.isPending) return <> Reading routes folder </>;
+  const treeData = fileTree.data!;
+
+  console.log('File Explorer render')
+
+  return (
+    <TreeView {...props} data={treeData.children!} onSelectChange={onSelectChange} />
+  )
+}
+
 export function FileExplorer({
   ...props
 }: React.ComponentProps<"div">
@@ -37,14 +57,5 @@ export function FileExplorer({
   if (configState.isPending) return <> No Pablo espanol </>;
   const config: Config = configState.data!;
 
-  const fileTree = useAsync({
-    promiseFn: useCallback(() => getFileTree(config.routesDir), [config.routesDir])
-  });
-
-  if (fileTree.isPending) return <> Reading routes folder </>;
-  const treeData = fileTree.data!;
-
-  return (
-    <TreeView {...props} data={treeData.children!} />
-  )
+  return <FileExplorerWithConfig {...props} config={config} />
 }
