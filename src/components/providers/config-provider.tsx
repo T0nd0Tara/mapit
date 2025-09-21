@@ -12,7 +12,7 @@ export function ConfigProvider({
   ...props
 }: { children: React.ReactNode }) {
   const config = useAsync<Config>({ promiseFn: getConfig });
-  const writeConfigHook = useAsync<void>({
+  const writeConfigHook = useAsync<Awaited<ReturnType<typeof writeConfig>>>({
     deferFn: ([newConfig]) => writeConfig(newConfig)
   });
 

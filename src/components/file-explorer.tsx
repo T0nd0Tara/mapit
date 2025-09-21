@@ -23,11 +23,6 @@ export function FileExplorer({
     promiseFn: useCallback(() => getFiles(config.routesDir), [config.routesDir])
   });
 
-  if (files.data) {
-    console.log('files.data')
-    console.log(files.data)
-  }
-
   return (
     <div {...props}>
     </div>
