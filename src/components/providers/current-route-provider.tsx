@@ -24,7 +24,7 @@ export const useCurrentRoute = (): CurrentRouteProviderState => {
   const currentRoute: CurrentRouteProviderState | undefined = use(CurrentRouteProviderContext);
 
   if (currentRoute === undefined)
-    throw new Error("useConfig must be used within a ConfigProvider")
+    throw new Error("useCurrentRoute must be used within a CurrentRouteProvider")
 
   return currentRoute
 }
