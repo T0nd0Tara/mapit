@@ -2,14 +2,10 @@ import { IState } from "@/types/state";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { IKeyValueObj } from "@/types/key-value";
 
-export interface IKeyValueObj {
-  key: string,
-  value: string,
-  enabled: boolean
-}
 
-export function KeyValueEditableTable({ values }: { values: IState<IKeyValueObj[]> }) {
+export function KeyValueEditableTable({ values, ...props }: { values: IState<IKeyValueObj[]> }) {
   const handleChange = (index: number, field: "key" | "value", value: string) => {
     const newRows = [...values.value];
 
@@ -38,7 +34,7 @@ export function KeyValueEditableTable({ values }: { values: IState<IKeyValueObj[
   const valuesWithNewRow: IKeyValueObj[] = [...values.value, { key: "", value: "", enabled: true }];
 
   return (
-    <Table>
+    <Table {...props}>
       <TableHeader>
         <TableRow>
           <TableHead>Key</TableHead>

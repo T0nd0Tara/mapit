@@ -4,38 +4,22 @@ import { IRequestState } from "@/types/request";
 import { RequestHeadersConfig } from "@/components/request-config-tabs/request-header-config";
 import { RequestParamConfig } from "./request-param-config";
 
-export function RequestConfigTabs({ request }: { request: IRequestState }) {
+export function RequestConfigTabs({
+  request,
+  ...props
+}:
+  React.ComponentProps<typeof Tabs> & {
+    request: IRequestState,
+  }) {
   return (
-    <Tabs defaultValue="headers">
-      <TabsList>
-        <TabsTrigger value="headers">Headers ({request.headers?.value.length})</TabsTrigger>
-        <TabsTrigger value="params">Params ({request.params?.value.length})</TabsTrigger>
+    <Tabs defaultValue="headers" {...props}>
+      <TabsList className="gap-1">
+        <TabsTrigger value="headers">Headers ({request.headers.value.length})</TabsTrigger>
+        <TabsTrigger value="params">Params ({request.params.value.length})</TabsTrigger>
         <TabsTrigger value="body">Body</TabsTrigger>
       </TabsList>
       <TabsContent value="headers">
         <RequestHeadersConfig headers={request.headers}></RequestHeadersConfig>
-        {/* <Card> */}
-        {/*   <CardHeader> */}
-        {/*     <CardTitle>Account</CardTitle> */}
-        {/*     <CardDescription> */}
-        {/*       Make changes to your account here. Click save when you&apos;re */}
-        {/*       done. */}
-        {/*     </CardDescription> */}
-        {/*   </CardHeader> */}
-        {/*   <CardContent className="grid gap-6"> */}
-        {/*     <div className="grid gap-3"> */}
-        {/*       <Label htmlFor="tabs-demo-name">Name</Label> */}
-        {/*       <Input id="tabs-demo-name" defaultValue="Pedro Duarte" /> */}
-        {/*     </div> */}
-        {/*     <div className="grid gap-3"> */}
-        {/*       <Label htmlFor="tabs-demo-username">Username</Label> */}
-        {/*       <Input id="tabs-demo-username" defaultValue="@peduarte" /> */}
-        {/*     </div> */}
-        {/*   </CardContent> */}
-        {/*   <CardFooter> */}
-        {/*     <Button>Save changes</Button> */}
-        {/*   </CardFooter> */}
-        {/* </Card> */}
       </TabsContent>
       <TabsContent value="params">
         <RequestParamConfig params={request.params} />
@@ -43,9 +27,9 @@ export function RequestConfigTabs({ request }: { request: IRequestState }) {
       <TabsContent value="body">
         <Textarea
           placeholder="Request Body (JSON)"
-          value={request.body.value}
+          value={request.body.value as string}
           onChange={(e) => request.body.set(e.target.value)}
-          className="w-full h-40"
+          className="w-full h-full"
         />
       </TabsContent>
     </Tabs>

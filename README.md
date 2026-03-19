@@ -1,30 +1,28 @@
-# React + TypeScript + Vite
+# Mapit
+A simple yet powerfull api client.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Reasons to create
+I truly love postman, I've tried every other API client out there, literally looked at [this](https://github.com/stepci/awesome-api-clients) list and tried every single one.
 
-Currently, two official plugins are available:
+But except Postman, and EchoAPI, None of them had all of the features I need.\
+Some didn't even say the response size or the response time. Crazy, I know.\
+Others, although Open-Source, had premium plan for a Git UI.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+The problem with EchoAPI was different tho, it had all of the features I needed and more (a lot of AI BS), but it was
+super slow. There really should be no reason for an API client to be slow.\
+So here I chose technologies like NwJS instead of Electron so it would be fast.
 
-## Expanding the ESLint configuration
+The problem with postman, is that it needs you to register. And because it is not an Open-Source project, You have to
+pay for all of the features, like, why? It is just a glorified `curl` command...
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-- Configure the top-level `parserOptions` property like this:
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+Mapit, is suppose to solve these problems.
+It should just be easy to create and save requests
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Tasks
+- [ ] Different ways to view response (raw, pretty)
+- [ ] Show response headers
+- [ ] File explorer
+- [ ] convert request to different types of program languages
+- [ ] show that request is pending

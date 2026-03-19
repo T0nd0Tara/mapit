@@ -4,6 +4,6 @@ import { IHeaders } from "@/types/request";
 
 export function RequestHeadersConfig({ headers }: { headers: IState<IHeaders> }) {
   return (
-    <KeyValueEditableTable values={headers}></KeyValueEditableTable>
+    <KeyValueEditableTable values={headers} data-testid='headers-key-value-table' />
   );
 }
